@@ -25,7 +25,7 @@ code {
 }
 .bg-main {
     height: 100vh;
-    background: url('@/assets/points.png');
+    background: url('@renderer/assets/points.png');
     background-position: 0 100%;
     background-repeat: repeat-x;
     background-size: 10px 432px;

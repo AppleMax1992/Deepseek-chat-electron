@@ -608,7 +608,7 @@ initConversations()
 <style lang="less" scoped>
 .chat-container {
   width: 100vw;
-  height: 100vh;
+  height: 93vh;
   display: flex;
   background-color: var(--color-bg-1);
 
@@ -643,7 +643,7 @@ initConversations()
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: 100vh;
+  height: 93vh;
 
   &.panel-sidebar {
     background-color: var(--color-fill-2)

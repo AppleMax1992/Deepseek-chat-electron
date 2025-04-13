@@ -1,10 +1,18 @@
-<template>
-    <router-view></router-view>
-</template>
+<script setup>
+import { Nav, Alert } from '@renderer/components';
+import { useAuthStore } from '@renderer/stores';
 
-<script>
-export default {
-    name: 'App'
-}
+const authStore = useAuthStore();
 </script>
 
+<template>
+    <div class="app-container" :class="authStore.user && 'bg-light'">
+        <Nav />
+        <Alert />
+        <router-view />
+    </div>
+</template>
+
+<style>
+@import '@renderer/assets/base.css';
+</style>
