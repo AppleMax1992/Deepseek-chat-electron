@@ -31,7 +31,10 @@ import { useIndexedDB } from '../utils/ChatDatabase'
 import { localMock, customChat} from '../servers'
 import { useThemeStore } from '../stores/themeStore'
 import SettingsModal from '../components/SettingsModal.vue';
-
+import { useAuthStore } from '@renderer/stores';
+import { storeToRefs } from 'pinia';
+const authStore = useAuthStore();
+const { user } = storeToRefs(authStore);
 
 function getRandomString() {
   const x = 2147483648
@@ -490,7 +493,7 @@ initConversations()
           <Avatar :size="32">
             <IconUser />
           </Avatar>
-          <span style="margin-left: 8px;">{{ userName }}</span>
+          <span style="margin-left: 8px;">{{ user.firstName }}</span>
         </div>
       </div>
     </Layout.Sider>

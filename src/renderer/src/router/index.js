@@ -2,6 +2,7 @@ import { createRouter, createWebHistory, createWebHashHistory } from 'vue-router
 import ChatWebSocket from '../views/ChatWebSocket.vue'
 import accountRoutes from './account.routes';
 import usersRoutes from './users.routes';
+import documentsRoutes from './documents.routes';
 import { useAuthStore, useAlertStore } from '@renderer/stores';
 import { Home } from '@renderer/views';
 // import ChatAI from '../components/MainBox/ChatAI.vue'
@@ -18,6 +19,7 @@ const routes = [
     { path: '/', component: Home },
     { ...accountRoutes },
     { ...usersRoutes },
+    { ...documentsRoutes },
     // catch all redirect to home page
     { path: '/:pathMatch(.*)*', redirect: '/' }
 

@@ -2,10 +2,9 @@
 import { storeToRefs } from 'pinia';
 
 import { useUsersStore } from '@renderer/stores';
-
+import { reactive } from 'vue';
 const usersStore = useUsersStore();
 const { users } = storeToRefs(usersStore);
-
 usersStore.getAll();
 </script>
 
@@ -48,4 +47,6 @@ usersStore.getAll();
             </tr>            
         </tbody>
     </table>
-</template>
+</template>  
+
+  
