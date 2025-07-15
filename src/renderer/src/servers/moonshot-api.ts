@@ -12,7 +12,7 @@ export const customChat = async (cmessage: any) => {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        message: cmessage.content
+        message: cmessage!.content
       })
     });
     const reader = response.body!.getReader();
@@ -36,4 +36,6 @@ export const customChat = async (cmessage: any) => {
         }
     }
 
+    // Return null or an appropriate value if no chunk was returned in the loop
+    return null;
   };

@@ -3,8 +3,8 @@ import { defineStore } from 'pinia';
 import { fetchWrapper } from '@renderer/helpers';
 import { useAuthStore } from '@renderer/stores';
 
-const baseUrl = `${import.meta.env.VITE_API_URL}/documents`;
-
+const baseUrl = `http://127.0.0.1:8080/documents`;
+console.log('baseUrl', baseUrl);
 export const useDocumentsStore = defineStore({
     id: 'documents',
     state: () => ({
@@ -12,13 +12,10 @@ export const useDocumentsStore = defineStore({
         document: {}
     }),
     actions: {
-        async register(document) {
-            await fetchWrapper.post(`${baseUrl}/document`, document);
-        },
         async getAll() {
             this.documents = { loading: true };
             try {
-                this.documents = await fetchWrapper.get(baseUrl);    
+                this.documents = await fetchWrapper.get(`${baseUrl}/list`);    
             } catch (error) {
                 this.documents = { error };
             }
@@ -26,13 +23,13 @@ export const useDocumentsStore = defineStore({
         async getById(id) {
             this.document = { loading: true };
             try {
-                this.document = await fetchWrapper.get(`${baseUrl}/${id}`);
+                this.document = await fetchWrapper.get(`${baseUrl}/list/${id}`);
             } catch (error) {
                 this.document = { error };
             }
         },
         async update(id, params) {
-            await fetchWrapper.put(`${baseUrl}/${id}`, params);
+            await fetchWrapper.put(`${baseUrl}/list/${id}`, params);
 
             // update stored document if the logged in document updated their own record
             const authStore = useAuthStore();
@@ -49,7 +46,7 @@ export const useDocumentsStore = defineStore({
             // add isDeleting prop to document being deleted
             this.documents.find(x => x.id === id).isDeleting = true;
 
-            await fetchWrapper.delete(`${baseUrl}/${id}`);
+            await fetchWrapper.delete(`${baseUrl}/list/${id}`);
 
             // remove document from list after deleted
             this.documents = this.documents.filter(x => x.id !== id);
@@ -58,6 +55,15 @@ export const useDocumentsStore = defineStore({
             const authStore = useAuthStore();
             if (id === authStore.document.id) {
                 authStore.logout();
+            }
+        },
+        async upload(formData) {
+            try {
+                const response = await fetchWrapper.post(`${baseUrl}/upload`, formData, true);
+                return response;
+            } catch (error) {
+                console.error('Upload failed:', error);
+                throw error;
             }
         }
     }

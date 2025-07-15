@@ -12,6 +12,7 @@ function createWindow(): void {
     autoHideMenuBar: true,
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
+      webSecurity: false,  // 关闭 CORS 和同源策略限制
       preload: join(__dirname, '../preload/index.js'),
       sandbox: false
     },
