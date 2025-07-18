@@ -1,7 +1,7 @@
 <template>
     <div class="search-group">
         <div class="search-zone">
-            <div class="logo" @click="$router.push('/')"
+            <div class="logo" @click="$router.push('/documents')"
                 style="cursor: pointer">
                 <img :src="logoSrc" width="100%" height="100%" alt=""/>
             </div>
@@ -97,7 +97,7 @@ const clickToSearch = (value) => {
       }
     })
     // 向父组件发出搜索事件
-    emit('on-search', true)
+    emit('on-search', value)
   } else {
     routeTo()
   }
