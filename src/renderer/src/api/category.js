@@ -1,6 +1,6 @@
 import URLS from './url'
 
-import {Get, Post, Put, Delete} from "@renderer/api/request";
+import {Get, Post, Put, Delete} from "@renderer/api/index";
 
 export default {
     postRelateData: (params) => {

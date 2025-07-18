@@ -1,4 +1,4 @@
-import {Get, Put} from "@renderer/api/request";
+import {Get, Put} from "@renderer/api/index";
 import URLS from './url'
 
 export default {

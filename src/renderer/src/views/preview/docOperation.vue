@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import StaticSource from "@/api/staticSourceUrl"
+import StaticSource from "@renderer/api/staticSourceUrl"
 
 export default {
     name: "docOperation",
@@ -23,17 +23,17 @@ export default {
             data: [
                 {
                     name: "竖个大拇指",
-                    src: require("@/assets/source/like.png"),
+                    src: require("@renderer/assets/source/like.png"),
                     index: "1"
                 },
                 {
                     name: "马上收藏",
-                    src: require("@/assets/source/heart.png"),
+                    src: require("@renderer/assets/source/heart.png"),
                     index: "2"
                 },
                 {
                     name: "立马下载",
-                    src: require("@/assets/source/download.png"),
+                    src: require("@renderer/assets/source/download.png"),
                     index: "3"
                 },
             ],

@@ -1,8 +1,15 @@
 <template>
-    <div class="search-result" ref="searchResult">
-        <div class="top-group">
+    <div class="homepage">
+        <div class="top-group" style="text-align: center; ">
             <img :src="imgSrc" width="100%" height="100%" alt=""/>
-            <SearchGroup ref="searchInput" @on-search="getListData"></SearchGroup>
+            <SearchGroup ref="searchInput" :value="keyword"  @on-search="getListData"></SearchGroup>
+            <div class="user-zone" v-if="!ad && !tokenExpired">
+                <span>{{ type | userType }}</span>
+            </div>
+
+        </div>
+        <div style="height: 30px;width: 100%;" v-if="!ad && !tokenExpired">
+
         </div>
         <div class="doc-group" ref="docGroup" style="">
             <SearchItem v-for="item in data.slice((currentPage-1)*pageSize, (currentPage)*pageSize)"
@@ -30,7 +37,6 @@
                 <span v-else>拼命查找中，请等待...</span>
             </div>
         </div>
-        <Footer></Footer>
     </div>
 </template>
 
@@ -42,7 +48,7 @@ import Footer from "@renderer/components/MyFooter.vue";
 
 import DocumentRequest from "@renderer/api/document"
 import SearchInput from "./SearchInput.vue"
-import SearchGroup from '@renderer/views/home/SearchGroup.vue'
+import SearchGroup from '@renderer/views/documents/SearchGroup.vue'
 import UserCard from '@renderer/views/home/UserCard.vue'
 import StaticSourceUrl from "@renderer/api/staticSourceUrl"
 import UserRequest from '@renderer/api/user'
@@ -70,7 +76,7 @@ const loading = ref(true)
 const currentData = ref([])
 const tokenExpired = ref(false)
 
-
+const keyword = route.query.keyWord;
 
 const searchResult = ref(null)
 const docGroup = ref(null)
@@ -132,7 +138,6 @@ async function checkLogin() {
 
 function getListData() {
   loading.value = true
-  let keyword = route.query.keyWord
   if (!keyword) return
 
   const params = {
@@ -176,73 +181,65 @@ function getListData() {
 </script>
 
 <style scoped>
-.nav {
-  background-color: #ffcc4f;
-  width: 100%;
-  height: 50px;
+
+.homepage {
+    width: 100%;
+    padding-bottom: 20px;
 }
 
-.search-result {
-  width: 100%;
-  background-color: #f7f7f7;
-  height: 100%;
+.homepage .top-group {
+    height: 140px;
+    width: 100%;
+    padding-bottom: 40px;
+    z-index: -1;
 }
 
-.search-result .top-group {
-  height: 340px;
-  width: 100%;
-  padding-bottom: 40px;
-  z-index: -1;
-  text-align: center;
-  position: relative;
+.homepage .top-group .user-zone {
+    position: absolute;
+    right: 40px;
+    top: 20px;
+    display: flex;
+    justify-content: flex-start;
+    padding: 5px 5px 0 5px;
+    color: #2c3e50;
 }
 
-.search-result .top-group .user-zone {
-  position: absolute;
-  right: 40px;
-  top: 20px;
-  display: flex;
-  justify-content: flex-start;
-  padding: 5px 5px 0 5px;
+.homepage .top-group .user-zone span {
+    height: 36px;
+    line-height: 36px;
+    font-size: 14px;
+    font-family: PingFangSC-Regular, PingFang SC, serif;
+    font-weight: 400;
+    padding-right: 10px;
 }
 
-.search-result .top-group .user-zone span {
-  height: 36px;
-  line-height: 36px;
-  font-size: 14px;
-  font-family: PingFangSC-Regular, PingFang SC, serif;
-  font-weight: 400;
-  color: #000000;
-  padding-right: 10px;
+.homepage .top-group .user-zone .user-tag {
+    border-radius: 36px;
+    box-sizing: content-box;
 }
 
-.search-result .top-group .user-zone .user-tag {
-  border-radius: 60px;
-  box-sizing: content-box;
+.homepage .top-group .user-zone .user-tag img {
+    border-radius: 38px;
+    height: 36px;
+    width: 36px;
+    box-shadow: 0 0 4px #bbbbbb;
 }
 
-.search-result .top-group .user-zone .user-tag img {
-  border-radius: 38px;
-  height: 36px;
-  width: 36px;
-  box-shadow: 0 0 4px #bbbbbb;
+.homepage .top-group .user-zone:hover {
+    cursor: pointer;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
 }
 
-.search-result .top-group .user-zone:hover {
-  cursor: pointer;
-  background-color: rgba(255, 255, 255, 0.2);
-  border-radius: 40px;
+.homepage .top-group .button-group {
+    height: 120px;
+    position: absolute;
+    top: 225px;
+    width: 1200px;
+    left: calc(50% - 600px);
 }
 
-.search-result .top-group .button-group {
-  height: 120px;
-  position: absolute;
-  top: 225px;
-  width: 1200px;
-  left: calc(50% - 600px);
-}
-
-.search-result .doc-group {
+.homepage .doc-group {
   width: 1200px;
   position: absolute;
   margin: auto;
@@ -258,11 +255,103 @@ function getListData() {
   display: inline-block;
 }
 
-.page-container {
-  text-align: left;
-  padding: 25px;
+.homepage .bottom-group .left-panel {
+    height: 100%;
+    width: 900px;
+    float: left;
+    padding: 0;
 }
 
+.homepage .bottom-group .right-panel {
+    height: 100%;
+    width: 300px;
+    float: left;
+    padding: 0 24px 0 40px;
+}
+
+.homepage .bottom-group .top-container {
+    height: 80px;
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.homepage .bottom-group .top-container .panel-title span {
+    font-size: 20px;
+    font-family: PingFangSC-Semibold, PingFang SC, serif;
+    font-weight: 600;
+    color: #464646;
+    line-height: 28px;
+}
+
+.homepage .bottom-group .top-container .left-pane-title {
+    margin-left: 24px;
+}
+
+.homepage .bottom-group .top-container .tag-info {
+    height: 30px;
+    background: #FACF36;
+    border-radius: 15px;
+    border: 1px solid #000000;
+    padding: 0 10px;
+    margin-left: 20px;
+    line-height: 32px;
+    color: #000000;
+}
+
+.homepage .bottom-group .top-container .tag-info span {
+    font-size: 14px;
+    font-family: PingFangSC-Regular, PingFang SC, serif;
+    font-weight: 400;
+    line-height: 20px;
+}
+
+.homepage .bottom-group .top-container .tag-info:hover {
+    cursor: pointer;
+    background: #FFFAE4;
+}
+
+.homepage .bottom-group .top-container .tag-info-unchecked {
+    height: 30px;
+    border-radius: 15px;
+    border: 1px solid #AAAAAA;
+    padding: 0 10px;
+    margin-left: 20px;
+    line-height: 32px;
+    color: #AAAAAA;
+}
+
+.homepage .bottom-group .top-container .tag-info-unchecked:hover {
+    cursor: pointer;
+    background: #FACF36;
+    border: 1px solid #000000;
+    color: #000000;
+}
+
+.homepage .bottom-group .top-container .tag-info-unchecked span {
+    height: 20px;
+    font-size: 14px;
+    font-family: PingFangSC-Regular, PingFang SC, serif;
+    font-weight: 400;
+    line-height: 20px;
+}
+
+.homepage .bottom-group .doc-thumb-1 {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    overflow: hidden;
+    padding-left: 20px;
+}
+
+.homepage .bottom-group .doc-thumb-1 .doc-thumb {
+    margin-right: 38px;
+}
+
+.homepage .bottom-group .second-group {
+    margin-top: 40px;
+}
 
 
 </style>

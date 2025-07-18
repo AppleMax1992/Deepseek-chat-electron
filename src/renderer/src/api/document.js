@@ -1,6 +1,6 @@
 import URLS from './url'
 
-import {Get, Post, Put, Delete, Download} from "@renderer/api/request";
+import {Get, Post, Put, Delete, Download} from "@renderer/api/index";
 
 export default {
 

@@ -1,39 +1,31 @@
-import {
-    COMMENT_ADD_URL,
-    COMMENT_LIST_URL,
-    COMMENT_REMOVE_URL,
-    COMMENT_REMOVE_BATCH_URL,
-    COMMENT_UPDATE_URL,
-    COMMENT_USER_URL,
-    COMMENT_ALL_URL
-} from './url'
+import URLS from './url'
 
-import {Post, Put, Delete} from "@/api/request";
+import {Post, Put, Delete} from "@renderer/api/index";
 
 export default {
 
     getListData: (params) => {
-        return Post(COMMENT_LIST_URL, params);
+        return Post(URLS.COMMENT_LIST_URL, params);
     },
 
     postData: (params) => {
-        return Post(COMMENT_ADD_URL, params);
+        return Post(URLS.COMMENT_ADD_URL, params);
     },
 
     deleteData: (params) => {
-        return Delete(COMMENT_REMOVE_URL, params);
+        return Delete(URLS.COMMENT_REMOVE_URL, params);
     },
 
     deleteDataBatch: (params) => {
-        return Delete(COMMENT_REMOVE_BATCH_URL, params);
+        return Delete(URLS.COMMENT_REMOVE_BATCH_URL, params);
     },
 
     getMyComments: (params) => {
-        return Post(COMMENT_USER_URL, params);
+        return Post(URLS.COMMENT_USER_URL, params);
     },
 
     getAllComments: (params) => {
-        return Post(COMMENT_ALL_URL, params);
+        return Post(URLS.COMMENT_ALL_URL, params);
     },
 }
 

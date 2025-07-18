@@ -5,7 +5,7 @@ import {
     UP_PROHIBITED_WORD_URL,
 } from './url'
 
-import {Get, Post, Delete, Put, Download} from "@/api/request";
+import {Get, Post, Delete, Put, Download} from "@renderer/api/index";
 
 export default {
 

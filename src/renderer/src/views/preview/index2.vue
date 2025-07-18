@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import StaticSourceUrl from '@/api/staticSourceUrl'
+import StaticSourceUrl from '@renderer/api/staticSourceUrl'
 
 let PDFJS = require('pdfjs-dist');
 PDFJS.GlobalWorkerOptions.workerSrc = require("pdfjs-dist/build/pdf.worker.entry.js");

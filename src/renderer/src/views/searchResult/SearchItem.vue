@@ -1,21 +1,22 @@
 <template>
     <div class="search-doc">
         <div class="doc-title-group">
+          
             <div class="doc-pic" style="text-align: center;">
-                <img :src="imgSrc(props.thumbId)" alt="thumb">
+                <img :src="imgSrc(thumbId)" alt="thumb">
             </div>
             <div class="title-group">
                 <div class="doc-title-info" @click="getDocView()" v-html="title">
                 </div>
                 <div class="description">
                     <div class="description-item">
-                        {{ props.timeIn }}
+                        {{ timeIn }}
                     </div>
                     <div class="description-item">
-                        {{ props.userName }}
+                        {{ userName }}
                     </div>
                     <div class="description-item" v-show="categoryIn">
-                        {{ props.categoryIn }}
+                        {{ categoryIn }}
                     </div>
                     <Tag color="blue" v-for="item in tagsIn">{{item}}</Tag>
                 </div>
@@ -51,10 +52,10 @@ const props = defineProps({
 })
 
 // 解构使用
-// const {
-//   id, thumbId, title, description, time,
-//   userName, category, tags
-// } = props
+const {
+  id, thumbId, title, description, time,
+  userName, category, tags
+} = props
 
 function getDocView() {
   router.push({
@@ -67,14 +68,14 @@ function getDocView() {
 
 // computed: 分类显示
 const categoryIn = computed(() => {
-  if (!props.category || !props.category.name) return null
-  return props.category.name.length > 6 ? props.category.name.substring(0, 6) + '...' : props.category.name
+  if (!category || !category.name) return null
+  return category.name.length > 6 ? category.name.substring(0, 6) + '...' : category.name
 })
 
 // computed: 标签显示
 const tagsIn = computed(() => {
-  if (!props.tags || props.tags.length === 0) return []
-  return props.tags.map(tag => {
+  if (!tags || tags.length === 0) return []
+  return tags.map(tag => {
     const name = tag.name || ''
     return name.length > 8 ? name.substring(0, 8) + '...' : name
   })
@@ -82,7 +83,7 @@ const tagsIn = computed(() => {
 
 // computed: 时间显示
 const timeIn = computed(() => {
-  const ts = typeof props.time === 'number' ? props.time : Number(props.time)
+  const ts = typeof time === 'number' ? time : Number(time)
   return parseTime(new Date(ts), '{y}年{m}月{d}日 {h}:{i}:{s}')
 })
 

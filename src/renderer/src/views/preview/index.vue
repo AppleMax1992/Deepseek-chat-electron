@@ -58,14 +58,14 @@
 </template>
 
 <script>
-import Nav from "@/components/Nav"
-import DocRequest from "@/api/document"
-import {parseTime} from "@/utils/index"
+import Nav from "@renderer/components/Nav_2.vue"
+import DocRequest from "@renderer/api/document"
+import {parseTime} from "@renderer/utils/index"
 
-import DocOperation from "./docOperation"
-import CommentPage from "./CommentPage"
-import VideoView from "@/views/preview/VideoView";
-import StaticSourceUrl from "@/api/staticSourceUrl"
+import DocOperation from "./docOperation.vue"
+import CommentPage from "./CommentPage.vue"
+// import VideoView from "./VideoView.vue";
+import StaticSourceUrl from "@renderer/api/staticSourceUrl"
 
 export default {
     data() {
@@ -89,7 +89,7 @@ export default {
         }
     },
     components: {
-        VideoView,
+        // VideoView,
         Nav, DocOperation, CommentPage
     },
     mounted() {
@@ -133,30 +133,30 @@ export default {
                     this.suffix = suffix;
                     switch (suffix) {
                         case 'pdf':
-                            this.component = () => import('@/views/preview/index2')
+                            this.component = () => import('./index2.vue')
                             break
                         case 'png':
                         case 'jpg':
                         case 'jpeg':
-                            this.component = () => import('@/views/preview/PngView')
+                            this.component = () => import('./PngView.vue')
                             break
                         case 'html':
                         case 'txt':
-                            this.component = () => import('@/views/preview/HtmlView')
+                            this.component = () => import('./HtmlView.vue')
                             break
                         case 'docx':
                         case 'doc':
-                            this.component = () => import('@/views/preview/WordView3')
+                            this.component = () => import('./WordView3.vue')
                             break
                         case 'pptx':
                             // this.component = () => import('@/views/preview/PPTxView')
-                            this.component = () => import('@/views/preview/PptxView2')
+                            this.component = () => import('./PptxView2.vue')
                             break
                         case 'xlsx':
-                            this.component = () => import('@/views/preview/excel2')
+                            this.component = () => import('./excel2.vue')
                             break
                         case 'md':
-                            this.component = () => import('@/views/preview/mdView')
+                            this.component = () => import('./mdView.vue')
                             break
                         case 'mp4':
                             // this.component = () => import('@/views/preview/VideoView')
@@ -175,7 +175,7 @@ export default {
                             // })
                             break
                         default:
-                            this.component = () => import('@/views/preview/ErrorView')
+                            this.component = () => import('./ErrorView.vue')
                             break
                     }
                 }
@@ -278,139 +278,124 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .nav {
     background-color: #f4d057;
     width: 100%;
     height: 50px;
-    //position: absolute;
-    //left: 0;
-    //top: 0;
 }
 
 .main-container {
     width: 1200px;
-    //height: 100vh;
-    //background-color: yellowgreen;
     padding: 25px;
     margin: auto;
     box-sizing: content-box;
+}
 
-    .title-info {
-        height: 185px;
-        width: 1200px;
-        box-shadow: 0px 0px 5px 0px rgba(64, 64, 64, 0.3000);
-        border-radius: 8px;
-        background-color: #fffeff;
-        padding: 36px;
-        display: block;
+.main-container .title-info {
+    height: 185px;
+    width: 1200px;
+    box-shadow: 0px 0px 5px 0px rgba(64, 64, 64, 0.3);
+    border-radius: 8px;
+    background-color: #fffeff;
+    padding: 36px;
+    display: block;
+}
 
-        .doc-trim {
-            float: left;
-            width: 40px;
-            //background-color: lightblue;
-            height: 40px;
-            line-height: 40px;
-            display: block;
-        }
+.main-container .title-info .doc-trim {
+    float: left;
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    display: block;
+}
 
-        .doc-info {
-            display: block;
-            width: calc(100% - 40px);
-            float: left;
-            padding: 0 10px;
-            text-align: left;
+.main-container .title-info .doc-info {
+    display: block;
+    width: calc(100% - 40px);
+    float: left;
+    padding: 0 10px;
+    text-align: left;
+}
 
-            .doc-info-title {
-                font-size: 24px;
-                font-family: PingFangSC-Semibold, PingFang SC;
-                font-weight: 600;
-                color: #000000;
-                line-height: 33px;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                display: -webkit-box;
-                -webkit-line-clamp: 2;
-                -webkit-box-orient: vertical;
-            }
+.main-container .title-info .doc-info .doc-info-title {
+    font-size: 24px;
+    font-family: PingFangSC-Semibold, PingFang SC;
+    font-weight: 600;
+    color: #000000;
+    line-height: 33px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
 
-            .doc-info-tag {
-                height: 40px;
-                line-height: 40px;
-                display: flex;
-                align-items: flex-start;
-                padding-top: 8px;
-                
-                .ivu-tag:hover {
-                    cursor: pointer;
-                }
-            }
+.main-container .title-info .doc-info .doc-info-tag {
+    height: 40px;
+    line-height: 40px;
+    display: flex;
+    align-items: flex-start;
+    padding-top: 8px;
+}
 
-            .doc-info-detail {
-                height: 40px;
-                font-size: 14px;
-                font-family: PingFangSC-Regular, PingFang SC;
-                font-weight: 400;
-                color: #000000;
-                line-height: 20px;
-            }
+.main-container .title-info .doc-info .doc-info-tag .ivu-tag:hover {
+    cursor: pointer;
+}
 
-        }
-    }
+.main-container .title-info .doc-info .doc-info-detail {
+    height: 40px;
+    font-size: 14px;
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: #000000;
+    line-height: 20px;
+}
 
-    .doc-preview {
-        margin: 20px 0;
-        overflow-y: auto;
-        height: calc(100vh - 80px);
-        //padding: 10px 0;
-        box-shadow: 0px 0px 5px 0px rgba(64, 64, 64, 0.3000);
-        border-radius: 8px;
-        background-color: #fffeff;
+.main-container .doc-preview {
+    margin: 20px 0;
+    overflow-y: auto;
+    height: calc(100vh - 80px);
+    box-shadow: 0px 0px 5px 0px rgba(64, 64, 64, 0.3);
+    border-radius: 8px;
+    background-color: #fffeff;
+    overflow: auto;
+    overscroll-behavior: contain;
+    -ms-scroll-chaining: contain;
+    position: relative;
+}
 
-        overflow: auto;
-        overscroll-behavior: contain;
-        -ms-scroll-chaining: contain;
+.main-container .doc-preview .preview-button {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 60px;
+    background-color: rgba(255, 255, 255, 0.5);
+    line-height: 60px;
+    text-align: right;
+    padding-right: 20px;
+}
 
-        position: relative;
+.main-container .my-container {
+    background-color: #fffeff;
+}
 
-        .preview-button {
-            position: absolute;
-            left: 0px;
-            top: 0px;
-            width: 100%;
-            height: 60px;
-            background-color: rgba(255,255,255,0.5);
-            line-height: 60px;
-            text-align: right;
-            padding-right: 20px;
-        }
-    }
+.main-container .my-container .doc-operation-body {
+    height: 200px;
+    text-align: center;
+    box-shadow: 0px 0px 5px 0px rgba(64, 64, 64, 0.3);
+    border-radius: 8px;
+    background-color: #fffeff;
+}
 
-    .my-container {
-        background-color: #fffeff;
-
-        .doc-operation-body {
-            height: 200px;
-            //line-height: 200px;
-            text-align: center;
-            box-shadow: 0px 0px 5px 0px rgba(64, 64, 64, 0.3000);
-            border-radius: 8px;
-            background-color: #fffeff;
-        }
-
-        .doc-comment {
-
-            margin: 20px 0;
-            min-height: 120px;
-
-            box-shadow: 0px 0px 5px 0px rgba(64, 64, 64, 0.3000);
-            border-radius: 8px;
-            background-color: #fffeff;
-
-            padding: 36px 40px;
-        }
-    }
-
+.main-container .my-container .doc-comment {
+    margin: 20px 0;
+    min-height: 120px;
+    box-shadow: 0px 0px 5px 0px rgba(64, 64, 64, 0.3);
+    border-radius: 8px;
+    background-color: #fffeff;
+    padding: 36px 40px;
 }
 
 </style>

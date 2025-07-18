@@ -7,25 +7,37 @@ import { storeToRefs } from 'pinia';
 import { useUsersStore, useAlertStore } from '@renderer/stores';
 import router from '@renderer/router';
 
+
+import  usersRequest  from '@renderer/api/user';
+import { reactive,ref,onMounted } from 'vue';
+
+
 const usersStore = useUsersStore();
 const alertStore = useAlertStore();
 const route = useRoute();
-const id = route.params.id;
-
-let title = 'Add User';
-let user = null;
+const id = route.query.id;
+const user = ref(null)
+let title = '创建用户';
 if (id) {
     // edit mode
-    title = 'Edit User';
-    ({ user } = storeToRefs(usersStore));
-    usersStore.getById(id);
+    title = '编辑用户';
+
 }
 
+const init = async () => {
+    const param = {
+        id: id
+    }
+    const res =  await usersRequest.getUser(param)
+    user.value = res.data 
+}
+
+onMounted(() => {
+  init()
+})
+
+
 const schema = Yup.object().shape({
-    firstName: Yup.string()
-        .required('First Name is required'),
-    lastName: Yup.string()
-        .required('Last Name is required'),
     username: Yup.string()
         .required('Username is required'),
     password: Yup.string()
@@ -39,7 +51,7 @@ async function onSubmit(values) {
     try {
         let message;
         if (user) {
-            await usersStore.update(user.value.id, values)
+            await usersRequest.update(user.value.id, values)
             message = 'User updated';
         } else {
             await usersStore.register(values);
@@ -55,9 +67,9 @@ async function onSubmit(values) {
 
 <template>
     <h1>{{title}}</h1>
-    <template v-if="!(user?.loading || user?.error)">
+    <template v-if="user">
         <Form @submit="onSubmit" :validation-schema="schema" :initial-values="user" v-slot="{ errors, isSubmitting }">
-            <div class="form-row">
+            <!-- <div class="form-row">
                 <div class="form-group col">
                     <label>First Name</label>
                     <Field name="firstName" type="text" class="form-control" :class="{ 'is-invalid': errors.firstName }" />
@@ -68,19 +80,28 @@ async function onSubmit(values) {
                     <Field name="lastName" type="text" class="form-control" :class="{ 'is-invalid': errors.lastName }" />
                     <div class="invalid-feedback">{{ errors.lastName }}</div>
                 </div>
-            </div>
+            </div> -->
+            <!-- let params = {
+                id: this.userInfo.id,
+                password: this.userInfo.password,
+                phone: this.userInfo.phoneNum,
+                mail: this.userInfo.mail,
+                male: this.userInfo.gender === 'male',
+                description: this.userInfo.userComment,
+                birthtime: this.userInfo.birthtime
+            } -->
             <div class="form-row">
                 <div class="form-group col">
-                    <label>Username</label>
-                    <Field name="username" type="text" class="form-control" :class="{ 'is-invalid': errors.username }" />
+                    <label>用户名</label>
+                    <Field name="username" type="text"  class="form-control" :value="user.username" :class="{ 'is-invalid': errors.username }" />
                     <div class="invalid-feedback">{{ errors.username }}</div>
                 </div>
                 <div class="form-group col">
                     <label>
-                        Password
-                        <em v-if="user">(Leave blank to keep the same password)</em>
+                        重置密码
+                        <em v-if="user">(如不更新则无需填充)</em>
                     </label>
-                    <Field name="password" type="password" class="form-control" :class="{ 'is-invalid': errors.password }" />
+                    <Field name="password" type="text" class="form-control" :class="{ 'is-invalid': errors.password }" />
                     <div class="invalid-feedback">{{ errors.password }}</div>
                 </div>
             </div>

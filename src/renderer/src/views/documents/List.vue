@@ -1,70 +1,3 @@
-<!-- <script setup>
-import { storeToRefs } from 'pinia';
-
-import { useDocumentsStore } from '@renderer/stores';
-
-const documentsStore = useDocumentsStore();
-const { documents } = storeToRefs(documentsStore);
-
-
-documentsStore.getAll();
-
-const upload = async (formData)  =>{
-    try {
-        const response = await fetch(`http://127.0.0.1:8080/upload`, formData, true);
-        return response;
-    } catch (error) {
-        console.error('Upload failed:', error);
-        throw error;
-    }
-}
-
-</script>
-
-<template>
-    <h1>Documents</h1>
-    <a-upload  :custom-request="documentsStore.upload" :default-file-list="fileList" enctype="multipart/form-data"/>
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th style="width: 30%">名称</th>
-                <th style="width: 30%">大小</th>
-                <th style="width: 30%">上传时间</th>
-                <th style="width: 10%"></th>
-            </tr>
-        </thead>
-        <tbody>
-            <template v-if="documents.length">
-                <tr v-for="document in documents" :key="document.id">
-                    <td>{{ document.file_name }}</td>
-                    <td>{{ document.file_size }}</td>
-                    <td>{{ document.upload_time }}</td>
-                    <td style="white-space: nowrap">
-                        <router-link :to="`/documents/edit/${document.id}`" class="btn btn-sm btn-primary mr-1">编辑</router-link>
-                        <button @click="documentsStore.delete(document.id)" class="btn btn-sm btn-danger btn-delete-document" :disabled="document.isDeleting">
-                            <span v-if="document.isDeleting" class="spinner-border spinner-border-sm"></span>
-                            <span v-else>Delete</span>
-                        </button>
-                    </td>
-                </tr>
-            </template>
-            <tr v-if="documents.loading">
-                <td colspan="4" class="text-center">
-                    <span class="spinner-border spinner-border-lg align-center"></span>
-                </td>
-            </tr>
-            <tr v-if="documents.error">
-                <td colspan="4">
-                    <div class="text-danger">Error loading documents: {{documents.error}}</div>
-                </td>
-            </tr>            
-        </tbody>
-    </table>
-</template> -->
-
-
-
-
 <template>
     <div class="homepage">
         <div class="top-group" style="text-align: center; ">
@@ -73,41 +6,7 @@ const upload = async (formData)  =>{
             <SearchGroup></SearchGroup>
             <div class="user-zone" v-if="!ad && !tokenExpired">
                 <span>{{ type | userType }}</span>
-                <!-- <Dropdown>
-                    <a class="user-tag" href="javascript:void(0)" style="text-align: center; width: 36px;" @mouseenter="checkLogin">
-                        <img :src="0 | userAvatar" alt="">
-                    </a>
-                    <template #list>
-                        <DropdownMenu>
-                            <DropdownItem><span style="color: #8d7b25;">{{ username | userNameTooLong }}</span></DropdownItem>
-                            <DropdownItem @click.native="$router.push('/userPage/userInfo')" divided>个人主页</DropdownItem>
-                            <DropdownItem @click.native="gotoAdminPage" v-show="type === 'ADMIN'">系统管理</DropdownItem>
-                            <DropdownItem @click.native="logout()" divided>退出登录</DropdownItem>
-                        </DropdownMenu>
-                    </template>
-                </Dropdown> -->
             </div>
-            <!-- <div class="user-zone" v-else>
-                <a class="user-tag" href="javascript:void(0)" style="text-align: center; width: 36px;"
-                   @click="$router.push('/login')">
-                    <img :src="defaultAvatar" alt="">
-                </a>
-            </div> -->
-            <div class="button-group" v-if="!ad && !tokenExpired">
-                <Row>
-                    <Col span="8" style="padding: 0 8px 0 0">
-                        <user-card title="我的收藏夹" subtitle="全是我辛苦收藏的宝贝" :src="img1" @click="toMyCollection"></user-card>
-                    </Col>
-                    <Col span="8" style="padding: 0 4px 0 4px">
-                        <user-card title="我上传的文档" subtitle="全都是精华全都是经典" :src="img2" @click="toMyUpload"></user-card>
-                    </Col>
-                    <Col span="8" style="padding: 0 0px 0 8px">
-                        <user-card title="点我上传文档" subtitle="使劲戳就对了" :src="img3" @click="toUploadPage"></user-card>
-                    </Col>
-                </Row>
-
-            </div>
-
         </div>
         <div style="height: 30px;width: 100%;" v-if="!ad && !tokenExpired">
 
@@ -145,14 +44,6 @@ const upload = async (formData)  =>{
                     ></DocThumb>
                 </div>
             </div>
-            <!-- <div class="right-panel">
-                <div class="top-container">
-                    <div class="panel-title"><span>热门文档排行 🔥</span></div>
-                </div>
-                <div class="hot-trend">
-                    <HotTrend></HotTrend>
-                </div>
-            </div> -->
         </div>
     </div>
 </template>
@@ -189,7 +80,7 @@ const data = ref([])
 const currentData = ref([])
 const tokenExpired = ref(false)
 
-const username = ref(localStorage.getItem('username'))
+// const username = ref(localStorage.getItem('username'))
 const type = ref(localStorage.getItem('type'))
 
 onMounted(() => {
@@ -258,7 +149,7 @@ function toUploadPage() {
 }
 
 .homepage .top-group {
-    height: 340px;
+    height: 140px;
     width: 100%;
     padding-bottom: 40px;
     z-index: -1;

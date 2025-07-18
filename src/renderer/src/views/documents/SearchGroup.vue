@@ -2,7 +2,7 @@
     <div class="search-group">
         <div class="search-zone">
             <div class="logo" @click="$router.push('/')"
-                 style="cursor: pointer">
+                style="cursor: pointer">
                 <img :src="logoSrc" width="100%" height="100%" alt=""/>
             </div>
             <div class="search-input">
@@ -11,15 +11,15 @@
                         <span>全部</span>
                     </div>
                     <input :placeholder="placeholder" v-model="searchValue"
-                           @focus="userInputFlag = true"
-                           @blur="whenInputBlur"
-                           @keyup.enter="clickToSearch(searchValue)"
-                           @input="changeItem"
-                           ref="input"
+                          @focus="userInputFlag = true"
+                          @blur="whenInputBlur"
+                          @keyup.enter="clickToSearch(searchValue)"
+                          @input="changeItem"
+                          ref="input"
                     ></input>
                     <div class="search-button"
-                         style="width: 100px; line-height: 45px; display: flex; align-content: center; flex-wrap: wrap; justify-content: center;"
-                         @click="clickToSearch(searchValue)"
+                        style="width: 100px; line-height: 45px; display: flex; align-content: center; flex-wrap: wrap; justify-content: center;"
+                        @click="clickToSearch(searchValue)"
                     >
                         <img :src="searchSrc" width="16px" height="16px" alt="" style="display: inline-block;"/>
                     </div>
@@ -33,7 +33,7 @@
                 </div>
                 <div class="user-search-result" v-show="userInputFlag && userSearch.length > 0">
                     <div class="user-search-item" v-for="item in userSearch"
-                         @mousedown="preventBlur($event)">
+                        @mousedown="preventBlur($event)">
                         <p @click="clickToUserSearch(item)">{{ item }}</p>
                         <div class="user-search-remove" @click="removeUserSearch(item)">删除</div>
                     </div>
@@ -167,11 +167,10 @@ const removeSearchHistory = async (searchWord) => {
 <style  scoped>
 .search-group {
     width: 100%;
-    height: 340px;
+    height: 140px;
     position: absolute;
     left: 0;
-    top: 0;
-    padding-top: 100px;
+    top: 100px;
 }
 
 .search-group .search-zone {

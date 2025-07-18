@@ -245,7 +245,7 @@ export default {
     padding-bottom: 20px;
 
     .top-group {
-        height: 340px;
+        height: 140px;
         width: 100%;
         padding-bottom: 40px;
         z-index: -1;

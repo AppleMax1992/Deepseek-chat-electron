@@ -42,9 +42,9 @@ border-radius: 48px"
 
 <script>
 
-import {parseTime} from "@/utils"
-import CommentRequest from "@/api/comment"
-import StaticSourceUrl from "@/api/staticSourceUrl"
+import {parseTime} from "@renderer/utils"
+import CommentRequest from "@renderer/api/comment"
+import StaticSourceUrl from "@renderer/api/staticSourceUrl"
 
 export default {
     name: "CommentPage",
@@ -171,79 +171,73 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .comment-body {
     padding: 20px 40px;
     text-align: left;
+}
 
-    .comment-title {
-        font-size: 14px;
-        font-family: PingFangSC-Medium, PingFang SC, serif;
-        font-weight: 500;
-        color: #000000;
-        line-height: 20px;
+.comment-body .comment-title {
+    font-size: 14px;
+    font-family: PingFangSC-Medium, PingFang SC, serif;
+    font-weight: 500;
+    color: #000000;
+    line-height: 20px;
+}
 
-        .comment-num {
-            font-weight: 400;
-            color: #858585;
-            line-height: 20px;
-        }
-    }
+.comment-body .comment-title .comment-num {
+    font-weight: 400;
+    color: #858585;
+    line-height: 20px;
+}
 
-    .comment-item {
-        border-bottom: 1px solid #EAEAEA;
-        //padding: 20px 10px;
-        padding: 20px 0;
-        display: flex;
-        //justify-content: left;
-        justify-content: flex-start;
-        flex-wrap: wrap;
+.comment-body .comment-item {
+    border-bottom: 1px solid #EAEAEA;
+    padding: 20px 0;
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+}
 
-        .comment-item-logo {
-            width: 60px;
-            line-height: 60px;
-            margin: 0 auto;
-            display: inline-block;
-            text-align: center;
-            padding-top: 10px;
-        }
+.comment-body .comment-item .comment-item-logo {
+    width: 60px;
+    line-height: 60px;
+    margin: 0 auto;
+    display: inline-block;
+    text-align: center;
+    padding-top: 10px;
+}
 
-        .comment-item-detail {
-            //float: left;
-            width: calc(100% - 60px);
-            margin: 0 auto;
-            display: inline-block;
-            //flex: 1;
-            .comment-item-user {
-                font-size: 14px;
-                font-family: PingFangSC-Medium, PingFang SC, serif;
-                font-weight: 500;
-                color: #000000;
-                line-height: 20px;
+.comment-body .comment-item .comment-item-detail {
+    width: calc(100% - 60px);
+    margin: 0 auto;
+    display: inline-block;
+}
 
-            }
+.comment-body .comment-item .comment-item-detail .comment-item-user {
+    font-size: 14px;
+    font-family: PingFangSC-Medium, PingFang SC, serif;
+    font-weight: 500;
+    color: #000000;
+    line-height: 20px;
+}
 
-            .comment-item-content {
-                //padding: 10px 0px;
-                color: #a5a2a3;
-                font-size: 14px;
-                font-family: PingFangSC-Regular, PingFang SC, serif;
-                font-weight: 400;
-                //color: #000000;
-                line-height: 20px;
-                padding-top: 10px;
-            }
+.comment-body .comment-item .comment-item-detail .comment-item-content {
+    color: #a5a2a3;
+    font-size: 14px;
+    font-family: PingFangSC-Regular, PingFang SC, serif;
+    font-weight: 400;
+    line-height: 20px;
+    padding-top: 10px;
+}
 
-            .comment-item-time {
-                padding-top: 10px;
-                font-size: 12px;
-                font-family: PingFangSC-Regular, PingFang SC, serif;
-                font-weight: 400;
-                color: #000000;
-                line-height: 17px;
-            }
-        }
-    }
+.comment-body .comment-item .comment-item-detail .comment-item-time {
+    padding-top: 10px;
+    font-size: 12px;
+    font-family: PingFangSC-Regular, PingFang SC, serif;
+    font-weight: 400;
+    color: #000000;
+    line-height: 17px;
 }
 
 .comment-btn {
@@ -255,7 +249,7 @@ export default {
     width: 95px;
     height: 30px;
     background: #FFF7D6;
-    box-shadow: 0 0 10px 0 rgba(129, 100, 0, 0.3000);
+    box-shadow: 0 0 10px 0 rgba(129, 100, 0, 0.3);
     border-radius: 8px;
     border: 2px solid #000000;
 
@@ -264,16 +258,16 @@ export default {
     font-weight: 600;
     color: #000000;
     line-height: 20px;
-
 }
 
 .ivu-btn:hover {
     background-color: #fcf3d2;
-    color: rgba(129, 100, 0, 0.3000);
-    border-color: rgba(129, 100, 0, 0.3000);
+    color: rgba(129, 100, 0, 0.3);
+    border-color: rgba(129, 100, 0, 0.3);
 }
 
 .paginator {
     padding: 10px;
 }
+
 </style>

@@ -1,64 +1,89 @@
 import { defineStore } from 'pinia';
-
-import { fetchWrapper } from '@renderer/helpers';
-import { useAuthStore } from '@renderer/stores';
-
+import URLS from '@renderer/api/url'
+console.log("我是user.s")
 const baseUrl = `${import.meta.env.VITE_API_URL}/users`;
+import {Get, Post, Delete, Put} from "@renderer/api/index";
+
+export default {
+
+    postData: (params) => {
+        return Post(URLS.USER_ADD_URL, params);
+    },
+
+    deleteData: (params) => {
+        return Delete(URLS.USER_REMOVE_URL, params);
+    },
+
+    deleteDataBatch: (params) => {
+        return Delete(URLS.USER_REMOVE_BATCH_URL, params);
+    },
+
+    postUserLogin: (data) => {
+        return Post(URLS.USER_LOGIN_URL, data);
+    },
+
+    getUserList: (params) => {
+        return Get(URLS.ALL_USER_URL, params);
+    },
+
+    getUser: (params) => {
+        return Post(URLS.USER_INFO_URL, params);
+    },
+
+    updateUser: (params) => {
+        return Put(URLS.USER_UPDATE_URL, params);
+    },
+
+    updateUserByAdmin: (params) => {
+        return Put(URLS.ADMIN_UPDATE_USER_URL, params);
+    },
+
+    addUserAvatar: (params) => {
+        return Post(URLS.USER_ADD_AVATAR_URL, params)
+    },
+
+    changeRole: (params) => {
+        return Put(URLS.USER_CHANGE_ROLE_URL, params);
+    },
+
+    blockUser: (params) => {
+        return Get(URLS.BLOCK_USER_URL, params);
+    },
+
+    checkUserLogin: (params) => {
+        return Get(URLS.CHECK_USER_LOGIN_URL, params);
+    },
+
+    resetUserPassword: (params) => {
+        return Post(URLS.RESET_USER_PWD_URL, params)
+    }
+}
 
 export const useUsersStore = defineStore({
     id: 'users',
     state: () => ({
-        users: {},
-        user: {}
+        userList: null,
+        returnUrl: null
     }),
     actions: {
-        async register(user) {
-            await fetchWrapper.post(`${baseUrl}/register`, user);
-        },
-        async getAll() {
-            this.users = { loading: true };
+        async login(username, password) {
             try {
-                this.users = await fetchWrapper.get(baseUrl);    
-            } catch (error) {
-                this.users = { error };
+                const users = await Post(URLS.USER_LOGIN_URL, {username, password});
+                this.userList = users;
+                router.push(this.returnUrl || '/users');
+            } 
+            catch (error) {
+                // const alertStore = useAlertStore();
+                // alertStore.error(error);
+                console.log('报错了')
             }
         },
-        async getById(id) {
-            this.user = { loading: true };
-            try {
-                this.user = await fetchWrapper.get(`${baseUrl}/${id}`);
-            } catch (error) {
-                this.user = { error };
-            }
-        },
-        async update(id, params) {
-            await fetchWrapper.put(`${baseUrl}/${id}`, params);
-
-            // update stored user if the logged in user updated their own record
-            const authStore = useAuthStore();
-            if (id === authStore.user.id) {
-                // update local storage
-                const user = { ...authStore.user, ...params };
-                localStorage.setItem('user', JSON.stringify(user));
-
-                // update auth user in pinia state
-                authStore.user = user;
-            }
-        },
-        async delete(id) {
-            // add isDeleting prop to user being deleted
-            this.users.find(x => x.id === id).isDeleting = true;
-
-            await fetchWrapper.delete(`${baseUrl}/${id}`);
-
-            // remove user from list after deleted
-            this.users = this.users.filter(x => x.id !== id);
-
-            // auto logout if the logged in user deleted their own record
-            const authStore = useAuthStore();
-            if (id === authStore.user.id) {
-                authStore.logout();
-            }
+        logout() {
+            this.user = null;
+            router.push('/account/login');
         }
-    }
+    },
+    persist: true  // 👈 启用持久化
 });
+
+

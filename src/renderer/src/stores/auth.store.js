@@ -1,40 +1,33 @@
 import { defineStore } from 'pinia';
-
-import { fetchWrapper } from '@renderer/helpers';
 import router from '@renderer/router';
-import { useAlertStore } from '@renderer/stores';
-
-const baseUrl = `${import.meta.env.VITE_API_URL}/users`;
-
+// console.log("我是user.store.js")
+import {Post} from '@renderer/api/index'
+import URLS from '@renderer/api/url'
 export const useAuthStore = defineStore({
     id: 'auth',
     state: () => ({
-        // initialize state from local storage to enable user to stay logged in
-        user: JSON.parse(localStorage.getItem('user')),
+        user: null,
         returnUrl: null
     }),
     actions: {
         async login(username, password) {
             try {
-                const user = await fetchWrapper.post(`${baseUrl}/authenticate`, { username, password });    
-
-                // update pinia state
+                const user = await Post(URLS.USER_LOGIN_URL, { username, password });
                 this.user = user;
-
-                // store user details and jwt in local storage to keep user logged in between page refreshes
-                localStorage.setItem('user', JSON.stringify(user));
-
-                // redirect to previous url or default to home page
                 router.push(this.returnUrl || '/');
-            } catch (error) {
-                const alertStore = useAlertStore();
-                alertStore.error(error);                
+            } 
+            catch (error) {
+                // const alertStore = useAlertStore();
+                // alertStore.error(error);
+                console.log('报错了')
             }
         },
         logout() {
             this.user = null;
-            localStorage.removeItem('user');
             router.push('/account/login');
         }
-    }
+    },
+    persist: true  // 👈 启用持久化
 });
+// const authStore = useAuthStore();
+// export default authStore
