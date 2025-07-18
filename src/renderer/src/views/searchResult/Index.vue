@@ -2,7 +2,7 @@
     <div class="homepage">
         <div class="top-group" style="text-align: center; ">
             <img :src="imgSrc" width="100%" height="100%" alt=""/>
-            <SearchGroup ref="searchInput" :value="keyword"  @on-search="getListData"></SearchGroup>
+            <SearchGroup ref="searchInput"  @on-search="getListData"></SearchGroup>
             <div class="user-zone" v-if="!ad && !tokenExpired">
                 <span>{{ type | userType }}</span>
             </div>
@@ -95,7 +95,7 @@ const userAvatar = computed(() => {
 })
 
 onMounted(() => {
-  getListData()
+  getListData(keyword)
 })
 
 function pageChange(page) {
@@ -136,10 +136,9 @@ async function checkLogin() {
   }
 }
 
-function getListData() {
+function getListData(keyword) {
   loading.value = true
   if (!keyword) return
-
   const params = {
     categoryId: '',
     filterWord: keyword,
@@ -149,9 +148,10 @@ function getListData() {
     type: 'FILTER',
     userId: localStorage.getItem('id')
   }
-
+  data.value = []
   DocumentRequest.getListData(params).then(res => {
     loading.value = false
+    
     if (res.code === 200) {
       totalItems.value = res.data.totalNum
       data.value = res.data.documents.map(doc => ({
