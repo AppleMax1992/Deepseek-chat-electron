@@ -17,12 +17,19 @@ const routes = [
         name: 'ChatWebSocket',
         component: ChatWebSocket
     },
-    { path: '/', component: Home },
+    { 
+        path: '/', component: Home, 
+        meta: { 
+            index: '1' 
+        } 
+    },
     { 
         path: '/account',
+        
         component: function () {
             return import("@renderer/views/account/Layout.vue")
         }, 
+        
         children: [
             { 
                 path: 'login',         
@@ -43,6 +50,9 @@ const routes = [
         component: function () {
             return import("@renderer/views/users/Layout.vue")
         },   
+        meta: { 
+            index: '2' 
+        }, 
         children: [
             {
                 path: '', // 空路径 = 默认子页面
@@ -69,6 +79,9 @@ const routes = [
         component: function () {
             return import("@renderer/views/documents/Layout.vue")
         },   
+        meta: { 
+            index: '3' 
+        }, 
         children: [
             {
                 path: '', // 空路径 = 默认子页面
@@ -111,6 +124,9 @@ const routes = [
         component: function () {
             return import("@renderer/views/searchResult/Layout.vue")
         },  
+        meta: { 
+            index: '3' 
+        }, 
         children: [
             {
                 path: '', // 空路径 = 默认子页面
