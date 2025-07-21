@@ -97,7 +97,7 @@ function imgSrc(value) {
 
 <style scoped>
 
-::v-deep .em-title {
+:deep .em-title {
   color: #5c86aa;
 }
 

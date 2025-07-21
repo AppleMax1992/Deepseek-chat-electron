@@ -38,11 +38,11 @@ export default {
     /*background-color: #f1db77;*/
 }
 
-::v-deep .ivu-input-group {
+:deep .ivu-input-group {
     box-shadow: rgba(0, 0, 0, 0.1) 0 1px 3px 0, rgba(0, 0, 0, 0.06) 0 1px 2px 0;
 }
 
-::v-deep .ivu-input {
+:deep .ivu-input {
     border-top-left-radius: 60px;
     border-bottom-left-radius: 60px;
     border: none;
@@ -50,18 +50,18 @@ export default {
     /*background-color: #f1db77;*/
 }
 
-::v-deep .ivu-input:focus {
+:deep .ivu-input:focus {
     border: none;
     outline: none;
 }
 
-::v-deep .ivu-input-group-append {
+:deep .ivu-input-group-append {
     border-top-right-radius: 60px;
     border-bottom-right-radius: 60px;
     border: none !important;
 }
 
-::v-deep .ivu-input-group-append::before {
+:deep .ivu-input-group-append::before {
     display: block;
     width: 1px;
     position: absolute;
@@ -72,7 +72,7 @@ export default {
     background-color: #f1db77;
 }
 
-::v-deep .ivu-input-search {
+:deep .ivu-input-search {
     background-color: #ffffff !important;
     color: #f1db77 !important;
 }

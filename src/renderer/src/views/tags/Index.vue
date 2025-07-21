@@ -134,7 +134,7 @@ export default {
     text-align: right;
 }
 
-::v-deep .demo-split-pane {
+:deep .demo-split-pane {
     padding: 0;
     text-align: left;
     height: 100%;
