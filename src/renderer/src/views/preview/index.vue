@@ -1,12 +1,9 @@
 <template>
     <div>
-        <div class="nav">
-            <Nav></Nav>
-        </div>
         <div class="main-container">
             <div class="title-info">
                 <div class="doc-trim" style="text-align: center">
-                    <img :src=" thumbId | imgSrc " alt="thumb"
+                    <img :src="imgSrc(thumbId)" alt="thumb"
                          style="width: 36px;max-height: 48px;border: 1px solid #dcdee2; border-radius: 2px">
                 </div>
                 <div class="doc-info">
@@ -31,17 +28,18 @@
                 </div>
             </div>
             <div class="doc-preview">
-                <video-view v-if="suffix === 'mp4'"></video-view>
-                <component :is="component"
-                           v-if="component && suffix !== 'mp4'"
-                           :previewId="previewId"
-                           :thumbId="thumbId"
-                />
-                <div class="preview-button" v-if="suffix==='pdf'">
-                    <Button type="primary" @click="preview">全屏预览</Button>
-                </div>
+                    <video-view v-if="suffix === 'mp4'"></video-view>
+                    <component :is="component"
+                              v-if="component && suffix !== 'mp4'"
+                              :previewId="previewId"
+                              :thumbId="thumbId"
+                    />
+                    <div class="preview-button" v-if="suffix==='pdf'">
+                        <Button type="primary" @click="preview">全屏预览</Button>
+                    </div>
             </div>
-            <div class="my-container">
+
+            <!-- <div class="my-container">
                 <div class="doc-operation-body">
                     <doc-operation :likeStatus="likeStatus" :collectStatus="collectStatus"
                                    @addLike="addLike"
@@ -50,232 +48,129 @@
                 <div class="doc-comment">
                     <comment-page/>
                 </div>
-            </div>
-
+            </div> -->
         </div>
     </div>
 
 </template>
 
-<script>
-import Nav from "@renderer/components/Nav_2.vue"
+<script setup>
 import DocRequest from "@renderer/api/document"
 import {parseTime} from "@renderer/utils/index"
 
 import DocOperation from "./docOperation.vue"
-import CommentPage from "./CommentPage.vue"
 // import VideoView from "./VideoView.vue";
 import StaticSourceUrl from "@renderer/api/staticSourceUrl"
+import {ref,onMounted, defineAsyncComponent} from "vue"
+import { useRoute, useRouter } from "vue-router"
+import docImg from '@renderer/assets/source/doc.png'
+// 状态定义
+const title = ref("")
+const userName = ref("")
+const docId = ref("")
+const tags = ref([])
+const createTime = ref(new Date())
+const thumbId = ref("")
+const component = ref(null)
+const tagColor = ['orange', 'gold', 'lime', 'cyan', 'blue', 'geekblue', 'magenta']
 
-export default {
-    data() {
-        return {
-            title: "",
-            userName: "",
-            docId: "",
-            tags: [],
-            createTime: new Date(),
-            thumbId: "",
-            component: null,
-            tagColor: ['orange', 'gold', 'lime', 'cyan', 'blue', 'geekblue', 'magenta'],
+const collectCount = ref(0)
+const collectStatus = ref(0)
+const previewId = ref(null)
+const suffix = ref("")
 
-            collectCount: 0,
-            likeCount: 0,
-            likeStatus: 0,
-            collectStatus: 0,
-            previewId: null,
+// 路由对象
+const route = useRoute()
+const router = useRouter()
 
-            suffix: "",
-        }
-    },
-    components: {
-        // VideoView,
-        Nav, DocOperation, CommentPage
-    },
-    mounted() {
-
-    },
-    filters: {
-        imgSrc(value) {
-            if (value === "" || value == null) {
-                return require('@/assets/source/doc.png');
-            } else {
-                return StaticSourceUrl.imageUrl(value);
-            }
-        }
-    },
-    created() {
-        this.init()
-        this.getLikeInfo();
-    },
-    methods: {
-        init() {
-            this.docId = this.$route.query.docId;
-            var params = {
-                docId: this.docId
-            }
-            DocRequest.getData(params).then(response => {
-                if (response.code === 200) {
-                    this.title = response.data.title;
-                    this.userName = response.data.userName;
-                    this.thumbId = response.data.thumbId;
-                    var docTime = response.data.createTime;
-                    this.createTime = parseTime(new Date(docTime), '{y}年{m}月{d}日 {h}:{i}:{s}');
-
-                    let tagList = response.data['tagVOList'];
-                    this.tags = this.renderTags(tagList);
-
-                    let title = response.data.title
-
-                    this.previewId = response.data.previewFileId
-
-                    let suffix = title.split(".")[title.split('.').length - 1];
-                    this.suffix = suffix;
-                    switch (suffix) {
-                        case 'pdf':
-                            this.component = () => import('./index2.vue')
-                            break
-                        case 'png':
-                        case 'jpg':
-                        case 'jpeg':
-                            this.component = () => import('./PngView.vue')
-                            break
-                        case 'html':
-                        case 'txt':
-                            this.component = () => import('./HtmlView.vue')
-                            break
-                        case 'docx':
-                        case 'doc':
-                            this.component = () => import('./WordView3.vue')
-                            break
-                        case 'pptx':
-                            // this.component = () => import('@/views/preview/PPTxView')
-                            this.component = () => import('./PptxView2.vue')
-                            break
-                        case 'xlsx':
-                            this.component = () => import('./excel2.vue')
-                            break
-                        case 'md':
-                            this.component = () => import('./mdView.vue')
-                            break
-                        case 'mp4':
-                            // this.component = () => import('@/views/preview/VideoView')
-                            // this.component = ({
-                            //     // 需要加载的组件 (应该是一个 `Promise` 对象)
-                            //     component: import('@/views/preview/VideoView'),
-                            //     // // 异步组件加载时使用的组件
-                            //     // loading: LoadingComponent,
-                            //     // // 加载失败时使用的组件
-                            //     // error: ErrorComponent,
-                            //     // 展示加载时组件的延时时间。默认值是 200 (毫秒)
-                            //     delay: 200,
-                            //     // 如果提供了超时时间且组件加载也超时了，
-                            //     // 则使用加载失败时使用的组件。默认值是：`Infinity`
-                            //     timeout: 3000
-                            // })
-                            break
-                        default:
-                            this.component = () => import('./ErrorView.vue')
-                            break
-                    }
-                }
-            })
-        },
-
-        renderTags(tags) {
-            tags.forEach((item, index) => {
-                item['index'] = index;
-                item['color'] = this.tagColor[parseInt(Math.random() * this.tagColor.length)];
-            })
-            return tags;
-        },
-
-        async getLikeInfo() {
-            let param = {
-                entityId: this.docId
-            }
-            await DocRequest.getLikeInfo(param).then(res => {
-                if (res.code === 200) {
-                    let result = res.data;
-                    this.collectCount = result.collectCount || 0;
-                    this.likeCount = result.likeCount || 0;
-                    this.likeStatus = result.likeStatus || 0;
-                    this.collectStatus = result.collectStatus || 0
-                } else {
-                    this.$Message.info("error")
-                }
-            }).catch(err => {
-                this.$Message.info("error")
-            })
-        },
-        async addLike(entityType) {
-            if (entityType !== 1 && entityType !== 2) {
-                return
-            }
-
-            let params = {
-                entityType: entityType,
-                entityId: this.docId
-            }
-            await DocRequest.addLike({params}).then(res => {
-                if (res.code == 200) {
-                    let result = res.data;
-                    if (entityType === 1) {
-                        this.likeCount = result.likeCount || 0;
-                        this.likeStatus = result.likeStatus || 0;
-                        if (this.likeStatus === 0) {
-                            this.$Message.info("取消点赞！")
-                        } else {
-                            this.$Message.success("点赞成功！")
-                        }
-                    } else {
-                        this.collectCount = result.likeCount || 0;
-                        this.collectStatus = result.likeStatus || 0;
-                        if (this.collectStatus === 0) {
-                            this.$Message.info("取消收藏！")
-                        } else {
-                            this.$Message.success("收藏成功！")
-                        }
-                    }
-                } else {
-                    this.$Message.info("error")
-                }
-            }).catch(err => {
-                this.$Message.info("error")
-            })
-        },
-        searchTag(value) {
-            if (value !== "") {
-                this.$router.push({
-                    path: '/searchResult',
-                    query: {
-                        keyWord: value
-                    }
-                })
-            }
-        },
-        preview() {
-            // this.$router.push({
-            //     path: '/newPreview',
-            //     query: {
-            //         docId: this.docId
-            //     }
-            // })
-
-            let text= this.$router.resolve({
-                path: '/newPreview',
-                query: {
-                docId: this.docId
-            }})
-
-            // 打开一个新的页面
-            window.open(text.href, '_blank');
-
-        }
-
-    }
-
+// 替代 filter
+function imgSrc(value) {
+  if (!value) return docImg
+  return StaticSourceUrl.imageUrl(value)
 }
+
+// 标签渲染
+const renderTags = (tagList) => {
+  tagList.forEach((item, index) => {
+    item.index = index
+    item.color = tagColor[Math.floor(Math.random() * tagColor.length)]
+  })
+  return tagList
+}
+
+// 初始化文档信息
+const init = async () => {
+  docId.value = route.query.docId
+  const params = { docId: docId.value }
+
+  const response = await DocRequest.getData(params)
+  if (response.code === 200) {
+    const data = response.data
+    title.value = data.title
+    userName.value = data.userName
+    thumbId.value = data.thumbId
+    createTime.value = parseTime(new Date(data.createTime), '{y}年{m}月{d}日 {h}:{i}:{s}')
+    tags.value = renderTags(data.tagVOList || [])
+    previewId.value = data.previewFileId
+
+    const fileSuffix = data.title.split('.').pop()
+    suffix.value = fileSuffix
+
+    switch (fileSuffix) {
+      case 'pdf':
+        component.value = defineAsyncComponent(() => import('./index2.vue'))
+        break
+      case 'png':
+      case 'jpg':
+      case 'jpeg':
+        component.value = defineAsyncComponent(() => import('./PngView.vue'))
+        break
+      case 'html':
+      case 'txt':
+        component.value = defineAsyncComponent(() => import('./HtmlView.vue'))
+        break
+      case 'docx':
+      case 'doc':
+        component.value = defineAsyncComponent(() => import('./WordView3.vue'))
+        break
+      case 'pptx':
+        component.value = defineAsyncComponent(() => import('./PptxView2.vue'))
+        break
+      case 'xlsx':
+        component.value = defineAsyncComponent(() => import('./excel2.vue'))
+        break
+      case 'md':
+        component.value = defineAsyncComponent(() => import('./mdView.vue'))
+        break
+      case 'mp4':
+        // 你可以按需添加视频组件
+        break
+      default:
+        component.value = defineAsyncComponent(() => import('./ErrorView.vue'))
+    }
+  }
+}
+
+
+// 搜索标签
+const searchTag = (value) => {
+  if (value !== "") {
+    router.push({ path: '/searchResult', query: { keyWord: value } })
+  }
+}
+
+// 预览跳转
+const preview = () => {
+    router.push({ path: '/newPreview', query: { docId: docId.value } })
+}
+
+
+
+
+// 初始化调用
+onMounted(() => {
+  init()
+})
 </script>
 
 <style scoped>

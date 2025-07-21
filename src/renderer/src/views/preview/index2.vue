@@ -1,7 +1,7 @@
 <template>
     <div class="home_wrap">
         <div style="height: calc(100% - 20px);position: relative">
-            <img :src=" thumbId | imgSrc " alt="thumb"
+            <img :src=" imgSrc(thumbId)" alt="thumb"
                  style="max-width: 100%;height: calc(100%);border: 1px solid #dcdee2; border-radius: 2px"
                  @mouseenter="enter" @mouseleave="leave"
             >
@@ -9,138 +9,188 @@
     </div>
 </template>
 
-<script>
+<script setup>
 import StaticSourceUrl from '@renderer/api/staticSourceUrl'
+import Nav_2 from '@renderer/components/Nav_2.vue';
 
-let PDFJS = require('pdfjs-dist');
-PDFJS.GlobalWorkerOptions.workerSrc = require("pdfjs-dist/build/pdf.worker.entry.js");
-export default {
-    data() {
-        return {
-            pdf_scale: 1.5,//pdf放大系数
-            pdf_pages: [],
-            pdf_div_width: '',
-            pdf_src: null,
-            loading: false,
+let PDFJS = import('pdfjs-dist');
+import { ref, onMounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { parseTime } from '@renderer/utils'  // 假设 parseTime 是你定义的时间格式化函数
+import DocRequest from '@renderer/api/document'
 
-            view_flag: true,
+// 路由
+const route = useRoute()
+const router = useRouter()
 
-            docId: this.$route.query.docId,
-            seen: false,
-        }
-    },
-    mounted() {
-        // this.get_pdfurl()
-    },
-    props: ["thumbId"],
-    filters: {
-        imgSrc(value) {
-            if (value === "" || value == null) {
-                return require('@/assets/source/doc.png');
-            } else {
-                return StaticSourceUrl.imageUrl(value);
-            }
-        }
-    },
-    methods: {
-        enter() {
-            this.seen = true;
-        },
-        leave() {
-            this.seen = false;
-        },
-        scaleD() {  //放大
-            let max = 0
-            if (window.screen.width > 1440) {
-                max = 1.4
-            } else {
-                max = 1.2
-            }
-            if (this.pdf_scale >= max) {
-                return
-            }
-            this.pdf_scale = this.pdf_scale + 0.1
-            this._loadFile(this.pdf_src)
-        },
-        scaleX() {  //缩小
-            let min = 1.0
-            if (this.pdf_scale <= min) {
-                return
-            }
-            this.pdf_scale = this.pdf_scale - 0.1
-            this._loadFile(this.pdf_src)
-        },
-        get_pdfurl() {
-            //获得pdf教案
-            this.loading = true
-            let docId = this.docId
+// refs (响应式变量)
+const title = ref("")
+const userName = ref("")
+const docId = ref("")
+const tags = ref([])
+const createTime = ref(new Date())
+const thumbId = ref("")
+const component = ref(null)
+const tagColor = ['orange', 'gold', 'lime', 'cyan', 'blue', 'geekblue', 'magenta']
 
-            //加载本地
-            this.pdf_src = StaticSourceUrl.docPreviewUrl(); // BackendUrl() + '/files/view/' + docId
-            this._loadFile(this.pdf_src)
-        },
-        _loadFile(url) {
-            //初始化pdf
-            let loadingTask = PDFJS.getDocument(url)
-            loadingTask.promise
-                .then((pdf) => {
-                    this.pdfDoc = pdf
-                    // pdf的总页数ß
-                    this.pdf_pages = this.pdfDoc.numPages
-                    //debugger
-                    this.$nextTick(() => {
-                        this._renderPage(1)
-                    })
-                    this.view_flag = false
-                })
-        },
-        _renderPage(num) {
-            //渲染pdf页
-            const that = this
-            this.pdfDoc.getPage(num)
-                .then((page) => {
-                    let canvas = document.getElementById('the_canvas' + num)
-                    let ctx = canvas.getContext('2d')
-                    let dpr = window.devicePixelRatio || 1
-                    let bsr = ctx.webkitBackingStorePixelRatio ||
-                        ctx.mozBackingStorePixelRatio ||
-                        ctx.msBackingStorePixelRatio ||
-                        ctx.oBackingStorePixelRatio ||
-                        ctx.backingStorePixelRatio || 1
-                    let ratio = dpr / bsr
-                    // 可通过Scale来调节初始的缩放比
-                    let viewport = page.getViewport({scale: this.pdf_scale})
+const collectCount = ref(0)
+const likeCount = ref(0)
+const likeStatus = ref(0)
+const collectStatus = ref(0)
+const previewId = ref(null)
 
-                    canvas.width = viewport.width * ratio
-                    canvas.height = viewport.height * ratio
+const suffix = ref("")
 
-                    canvas.style.width = viewport.width + 'px'
-                    that.pdf_div_width = viewport.width + 'px'
-                    canvas.style.height = viewport.height + 'px'
-
-                    ctx.setTransform(ratio, 0, 0, ratio, 0, 0)
-                    let renderContext = {
-                        canvasContext: ctx,
-                        viewport: viewport
-                    }
-                    page.render(renderContext).promise.then(() => {
-                    })
-                    if (this.pdf_pages > num) {
-                        this._renderPage(num + 1)
-                    }
-                })
-        },
-    }
+// 图片地址过滤器替代
+const imgSrc = (value) => {
+  if (!value) {
+    return new URL('@renderer/assets/source/doc.png', import.meta.url).href
+  } else {
+    return StaticSourceUrl.imageUrl(value)
+  }
 }
+
+
+// 初始化函数
+const init = async () => {
+  docId.value = route.query.docId
+  const params = { docId: docId.value }
+
+  const response = await DocRequest.getData(params)
+  if (response.code === 200) {
+    const data = response.data
+    title.value = data.title
+    userName.value = data.userName
+    thumbId.value = data.thumbId
+    createTime.value = parseTime(new Date(data.createTime), '{y}年{m}月{d}日 {h}:{i}:{s}')
+    tags.value = renderTags(data.tagVOList)
+    previewId.value = data.previewFileId
+
+    const fileSuffix = data.title.split('.').pop()
+    suffix.value = fileSuffix
+
+    switch (fileSuffix) {
+      case 'pdf':
+        component.value = (await import('@renderer/views/preview/index2.vue')).default
+        break
+      case 'png':
+      case 'jpg':
+      case 'jpeg':
+        component.value = (await import('@renderer/views/preview/PngView.vue')).default
+        break
+      case 'html':
+      case 'txt':
+        component.value = (await import('@renderer/views/preview/HtmlView.vue')).default
+        break
+      case 'doc':
+      case 'docx':
+        component.value = (await import('@renderer/views/preview/WordView3.vue')).default
+        break
+      case 'pptx':
+        component.value = (await import('@renderer/views/preview/PptxView2.vue')).default
+        break
+      case 'xlsx':
+        component.value = (await import('@renderer/views/preview/excel2.vue')).default
+        break
+      case 'md':
+        component.value = (await import('@renderer/views/preview/mdView.vue')).default
+        break
+      case 'mp4':
+        // component.value = (await import('@/views/preview/VideoView.vue')).default
+        break
+      default:
+        component.value = (await import('@renderer/views/preview/ErrorView.vue')).default
+        break
+    }
+  }
+}
+
+// 渲染标签颜色
+const renderTags = (tagList) => {
+  return tagList.map((item, index) => ({
+    ...item,
+    index,
+    color: tagColor[Math.floor(Math.random() * tagColor.length)]
+  }))
+}
+
+// 获取点赞信息
+const getLikeInfo = async () => {
+  try {
+    const res = await DocRequest.getLikeInfo({ entityId: docId.value })
+    if (res.code === 200) {
+      const result = res.data
+      collectCount.value = result.collectCount || 0
+      likeCount.value = result.likeCount || 0
+      likeStatus.value = result.likeStatus || 0
+      collectStatus.value = result.collectStatus || 0
+    } else {
+      window.$message?.info("error")
+    }
+  } catch (e) {
+    window.$message?.info("error")
+  }
+}
+
+// 点赞/收藏
+const addLike = async (entityType) => {
+  if (![1, 2].includes(entityType)) return
+
+  try {
+    const res = await DocRequest.addLike({ params: { entityType, entityId: docId.value } })
+    if (res.code === 200) {
+      const result = res.data
+      if (entityType === 1) {
+        likeCount.value = result.likeCount || 0
+        likeStatus.value = result.likeStatus || 0
+        likeStatus.value === 0
+          ? window.$message?.info("取消点赞！")
+          : window.$message?.success("点赞成功！")
+      } else {
+        collectCount.value = result.likeCount || 0
+        collectStatus.value = result.likeStatus || 0
+        collectStatus.value === 0
+          ? window.$message?.info("取消收藏！")
+          : window.$message?.success("收藏成功！")
+      }
+    } else {
+      window.$message?.info("error")
+    }
+  } catch (e) {
+    window.$message?.info("error")
+  }
+}
+
+// 搜索标签
+const searchTag = (value) => {
+  if (value !== "") {
+    router.push({ path: '/searchResult', query: { keyWord: value } })
+  }
+}
+
+// 预览页面跳转
+const preview = () => {
+  const routeData = router.resolve({ path: '/newPreview', query: { docId: docId.value } })
+  window.open(routeData.href, '_blank')
+}
+
+// 生命周期钩子
+onMounted(() => {
+    console.log("=========hhhhhhhhhhhhhhhhhhhhh========")
+    init()
+    getLikeInfo()
+})
+
+
 </script>
-<style lang="scss" scoped>
+<style scoped>
 .home_wrap {
-    //width: 100%;
     width: 1200px;
     height: 100%;
 
     background-color: #757575;
-    padding-top: 20px;
+    padding-top: 80px;
+    text-align: center;
 
     .pdf_down {
         position: fixed;
