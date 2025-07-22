@@ -14,8 +14,8 @@ instance.interceptors.request.use(config => {
         const authStore = useAuthStore();
         console.log("!!!!!!!!!!!!!!!!!!",authStore)
         config.headers.authorization = authStore.user.data.token;
-        config.headers.id = authStore.user.userId
-        config.headers.username = authStore.user.username
+        config.headers.id = authStore.user.data.userId
+        config.headers.username = authStore.user.data.username
     }
     return config;
 }, error => {
