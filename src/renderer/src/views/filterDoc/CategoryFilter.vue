@@ -49,7 +49,7 @@
 
 import CategoryRequest from "@renderer/api/category";
 import logoSrc from '@renderer/assets/svg/newLogo.svg'
-import searchSrc from '@renderer/assets/svg/newLogo.svg'
+import searchSrc from '@renderer/assets/svg/search.svg'
 export default {
     name: "CategoryFilter",
     data() {
