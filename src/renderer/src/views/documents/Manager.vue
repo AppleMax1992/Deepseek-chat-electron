@@ -15,7 +15,7 @@
                 <div class="upload-panel" @click="uploadDialogShow">
                     <div style="padding: 30px 0;">
                         <div style="padding: 5px; line-height: 45px;">
-                            <img :src="buttonSrc" width="68px" height="68px" alt="upload-pic"/>
+                            <img :src="folderSrc" width="68px" height="68px" alt="upload-pic"/>
                         </div>
                         <p>支持Word/Excel/PPT/PDF，不超过100M</p>
                     </div>
@@ -23,16 +23,17 @@
                            @change="changeFile">
                 </div>
             </Col>
+            <!-- <a-upload @change="changeFile" draggable action="/" /> -->
         </Row>
         <Row v-show="true">
             <Col span="1" class="star-tag">
             </Col>
             <Col span="20" style="text-align: left">
-                <div class="file-title">
+                <div class="file-title" v-if="filename">
                     <span>{{ filename }}</span>
                 </div>
                 <div class="progress-wrapper" v-if="processFlag">
-                    <div class="pro" :style="uploadProcess | processToStr"></div>
+                    <div class="pro" :style="uploadProcess | processStyle"></div>
                 </div>
             </Col>
         </Row>
@@ -57,21 +58,22 @@
             </Col>
         </Row>
     </div>
-    <table class="table table-striped">
-        <thead>
+    <table class="table table-striped" style="text-align: center;">
+        <thead >
             <tr>
 
                 <th style="width: 30%">文件名</th>
+                <th style="width: 30%">上传时间</th>
                 <th style="width: 30%">操作</th>
             </tr>
         </thead>
         <tbody>
             <template v-if="data">
                 <!-- 12个一组 -->
-                <tr v-for="item in data.docList" :key="item.id">
+                <tr v-for="item in docList" :key="item.id">
                     <td>{{ item.name }}</td>
                     <!-- <td>{{ item.permissionEnum }}</td> -->
-                    <!-- <td>{{ item.createDate }}</td> -->
+                    <td>{{ formatTimestamp(item.uploadDate) }}</td>
                     <td style="white-space: nowrap">
                         <button @click="getDocView(item.id)" class="btn btn-sm btn-primary mr-1" :disabled="item.isDeleting">
                             <span v-if="item.isDeleting" class="spinner-border spinner-border-sm"></span>
@@ -95,34 +97,135 @@
             </tr>            
         </tbody>
     </table>
-    <a-pagination :total="200" show-total/>
+    <a-pagination
+    :current="pageNum"
+    :page-size="pageSize"
+    :total="total"
+    show-total
+    show-size-changer
+    @change="handlePageChange"
+    @pageSizeChange="handlePageSizeChange"
+    />
 </template>  
 
 <script setup>
 import { Message } from '@arco-design/web-vue';
 import {BackendUrl} from '@renderer/api/request'
-import DocumentRequest from '@renderer/api/document';
+import CategoryRequest from "@renderer/api/category"
+import DocumentRequest from "@renderer/api/document"
 import { computed, reactive, ref, onMounted } from 'vue';
 import router from '@renderer/router';
 import buttonSrc from '@renderer/assets/source/upload.png'
+import folderSrc from '@renderer/assets/source/folder.png'
 import StatsRequest from "@renderer/api/stats";
 
 const data = ref([])
+const currentPage = ref(1)
+const totalItems = ref(0)
+const type = ref('ALL')  // 假设你的 type 是响应式的 ref
+const currentType = computed(() => {
+  return ['ALL', 'CATEGORY', 'TAG'].includes(type.value) ? type.value : 'ALL'
+})
 
+const handlePageChange = (newPage) => {
+  pageNum.value = newPage
+  getRecentDocList()
+}
+
+const handlePageSizeChange = (newSize) => {
+  pageSize.value = newSize
+  pageNum.value = 1
+  getRecentDocList()
+}
+// total: 100,
+// pageNum: 1,
+// pageSize: 60,
+
+const pageNum = ref(1)
+const pageSize = ref(60)
+const total = ref(100)
+const loadedPages = ref([])
+const cateId = ref('')
+const tagId = ref('')
+const keyword = ref('')
+const requestType = ref('')  // 'collect' | 'upload' | ''
+const docList = ref([])
+
+const spinShow = ref(false)
 const init = () => {
-    StatsRequest.getRecentDoc().then(response => {
-        if (response.code === 200) {
-            data.value = response.data[0]
-        }
-        }).catch(() => {
-            Message?.error("查询最近文档出错！")
-        })
+    getRecentDocList()
+}
+
+
+function formatTimestamp(cellValue) {
+  if (!cellValue) return ''
+  const date = new Date(cellValue)
+  const pad = n => (n < 10 ? '0' + n : n)
+
+  const Y = date.getFullYear()
+  const M = pad(date.getMonth() + 1)
+  const D = pad(date.getDate())
+  const h = pad(date.getHours())
+  const m = pad(date.getMinutes())
+  const s = pad(date.getSeconds())
+
+  return `${Y}-${M}-${D} ${h}:${m}:${s}`
 }
 
 onMounted(() => {
   init()
 })
 
+
+
+const getRecentDocList = async () => {
+    if (pageNum.value > total.value / pageSize.value) return
+    if (loadedPages.value.includes(pageNum.value)) return
+
+    const param = {
+    cateId: cateId.value,
+    tagId: tagId.value,
+    keyword: keyword.value,
+    page: pageNum.value,
+    rows: pageSize.value
+    }
+
+    loadedPages.value.push(pageNum.value)
+
+    const handleSuccess = (res) => {
+    if (res.code === 200) {
+        const result = res.data
+        result.data.forEach(item => docList.value.push(item))
+        pageNum.value = result.pageNum + 1
+        pageNum.value++  // 重复 ++ 原样保留
+        total.value = result.total
+        pageSize.value = result.pageSize
+    }
+    spinShow.value = false
+    }
+
+    const handleError = (err) => {
+        Message.error('出错：' + (err || '请稍后重试'))
+        spinShow.value = false
+    }
+
+    spinShow.value = true
+
+    try {
+    if (requestType.value === 'collect') {
+        const res = await CategoryRequest.getMyCollectList(param)
+        handleSuccess(res)
+    } else if (requestType.value === 'upload') {
+        const res = await CategoryRequest.getMyUploadList(param)
+        handleSuccess(res)
+    } else {
+        const res = await CategoryRequest.getDocList(param)
+        handleSuccess(res)
+    }
+    } catch (err) {
+    handleError(err)
+    }
+}
 
 // 删除记录
 function removeDoc(id) {
@@ -229,7 +332,7 @@ async function uploadFile() {
     processFlag.value = false
     uploadProcess.value = 0.0
   }
-  uploadParam = {}
+  uploadParam.value = {}
 }
 // 切换分类
 function switchCategory() {
@@ -239,7 +342,7 @@ function switchCategory() {
 
 
   
-<style scoped>
+<style lang="less" scoped>
 
 .main-container {
     padding: 30px;
@@ -257,7 +360,7 @@ function switchCategory() {
     }
 
     .upload-panel {
-        width: 300px;
+        width: 100%;
         height: 190px;
         background: #FFFFFF;
         border-radius: 8px;
@@ -289,12 +392,12 @@ function switchCategory() {
 
     .progress-wrapper {
         width: 100%;
-        height: 3px;
+        height: 20px;
         background-color: #eeeeee;
-        position: absolute;
+        // position: absolute;
 
         .pro {
-            width: 40%;
+            width: 100%;
             height: 100%;
             background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
             background-color: #00B83F;
@@ -350,7 +453,7 @@ function switchCategory() {
     }
 
     .description-area {
-        ::v-deep .ivu-input {
+        :deep(.ivu-input) {
             border: 1px solid #000000;
         }
     }
@@ -362,7 +465,7 @@ function switchCategory() {
     }
 }
 
-::v-deep .ivu-upload-drag {
+:deep(.ivu-upload-drag) {
     border: none;
 }
 
