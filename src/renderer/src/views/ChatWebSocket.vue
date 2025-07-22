@@ -592,7 +592,7 @@ initConversations()
 
         <div class="panel-footer input-wrapper">
           <div class="chat-input-body">
-            <input ref="inputRef" v-model="inputMessage" type="text" placeholder="输入您的问题，按回车发送"
+            <input ref="inputRef" v-model="inputMessage" type="text" placeholder="请输入您的问题，按回车发送"
               @keyup.enter="sendMessage" :disabled="isLoading" class="custom-input" />
             <Button v-if="inputMessage.trim() && !isLoading" @click="sendMessage" shape="circle" class="send-button">
               <IconArrowUp />
@@ -922,7 +922,7 @@ initConversations()
 .chat-input-body {
   display: flex;
   align-items: center;
-  width: calc(100vw - 282px);
+  width: calc(100vw - 50px);
 }
 
 .custom-input {
