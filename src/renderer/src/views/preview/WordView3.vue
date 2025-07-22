@@ -6,21 +6,21 @@
             </div>
             <div style='font-size:16px' >加载中...</div>
         </div>
-<!--        不支持预览doc，只能预览docx哦-->
+       <!-- 不支持预览doc，只能预览docx哦 -->
         <div ref="file"></div>
     </div>
 </template>
 
 <script>
 import axios from 'axios'
-const docx = require('docx-preview');
+// import docx from 'docx-preview'
 
 // 如果 docx-preview 版本比较新需要 es6 导出
-// import { renderAsync } from 'docx-preview'
+import { renderAsync } from 'docx-preview'
 
-window.JSZip = require('jszip')
+// window.JSZip = require('jszip')
 
-import StatisticSourceUrl from '@/api/staticSourceUrl'
+import StatisticSourceUrl from '@renderer/api/staticSourceUrl'
 
 export default {
     name: "WordView3.vue",
@@ -40,9 +40,8 @@ export default {
             data: {},
             url: wordURL,
         }).then(res => {
-            // docx.renderAsync(blob,this.$refs.file)
             // 渲染到页面预览
-            docx.renderAsync(res.data, this.$refs.file)
+            renderAsync(res.data, this.$refs.file)
             this.view_flag = false
         })
     },

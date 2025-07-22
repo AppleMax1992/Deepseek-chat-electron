@@ -12,7 +12,7 @@
 
 // docx文档预览(只能转换.docx文档，转换过程中复杂样式被忽，居中、首行缩进等)
 import mammoth from "mammoth";
-import { BackendUrl } from '@/api/request'
+import { BackendUrl } from '@renderer/api/request'
 
 import StatisticSource from "@/api/staticSourceUrl"
 

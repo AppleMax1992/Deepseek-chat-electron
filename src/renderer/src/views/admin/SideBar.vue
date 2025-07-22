@@ -60,7 +60,7 @@ export default {
 </script>
 
 <style scoped>
-::v-deep .ivu-menu-light {
+:deep .ivu-menu-light {
     height: 100% !important;
 }
 

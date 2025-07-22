@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import SearchGroup from '@renderer/views/home/SearchGroup.vue'
+import SearchGroup from '@renderer/views/documents/SearchGroup.vue'
 import TagFilter from '@renderer/views/filterDoc/TagFilter.vue'
 import CategoryFilter from '@renderer/views/filterDoc/CategoryFilter.vue'
 import FilterListPage from '@renderer/views/filterDoc/FilterListPage.vue'
@@ -170,12 +170,12 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
+<style scoped>
 .main-container {
     padding: 30px;
 
     .tab {
-        ::v-deep .ivu-tabs-nav {
+        :deep .ivu-tabs-nav {
             //width: 64px;
             //height: 22px;
             font-size: 16px;

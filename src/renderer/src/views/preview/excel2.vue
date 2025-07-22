@@ -17,7 +17,7 @@
 import VueOfficeExcel from '@vue-office/excel'
 //引入相关样式
 import '@vue-office/excel/lib/index.css'
-import StatisticSource from "@/api/staticSourceUrl"
+import StatisticSource from "@renderer/api/staticSourceUrl"
 
 export default {
     name: "ExcelView",

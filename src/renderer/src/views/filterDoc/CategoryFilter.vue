@@ -47,14 +47,15 @@
 
 <script>
 
-import CategoryRequest from "@/api/category";
-
+import CategoryRequest from "@renderer/api/category";
+import logoSrc from '@renderer/assets/svg/newLogo.svg'
+import searchSrc from '@renderer/assets/svg/newLogo.svg'
 export default {
     name: "CategoryFilter",
     data() {
         return {
-            logoSrc: require("@/assets/svg/newLogo.svg"),
-            searchSrc: require("@/assets/svg/search.svg"),
+            logoSrc: logoSrc,
+            searchSrc: searchSrc,
             placeholder: '请输入您想要查找的文档',
             categoryType: 'CATEGORY',
             searchValue: '',
@@ -105,7 +106,7 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
+<style scoped >
 .category-container {
     line-height: 45px;
     width: 100%;

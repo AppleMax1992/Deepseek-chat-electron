@@ -76,7 +76,7 @@ export default {
     padding: 16px;
     text-align: left;
 
-    ::v-deep .ivu-tabs-content {
+    :deep .ivu-tabs-content {
         height: 100%;
     }
 }

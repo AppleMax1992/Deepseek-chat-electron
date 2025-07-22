@@ -31,7 +31,7 @@ export default {
 
 .sid
 <style scoped>
-::v-deep .ivu-layout-header {
+:deep .ivu-layout-header {
     background: none;
     padding: 0;
     height: 50px;

@@ -17,6 +17,7 @@
 <script setup>
 
 import CategoryRequest from "@renderer/api/category";
+import {ref, onMounted} from 'vue'
 const emit = defineEmits(['changeTag'])
 
 const tagNames = ref([])
@@ -67,7 +68,7 @@ onMounted(() => {
 })
 </script>
 
-<style scoped lang="scss">
+<style scoped>
 .tag-panel {
     margin: 30px 0 22px 0;
     display: flex;

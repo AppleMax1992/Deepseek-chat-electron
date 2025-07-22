@@ -13,49 +13,30 @@
     </div>
 </template>
 
-<script>
+<script setup>
 import StaticSource from "@renderer/api/staticSourceUrl"
+import { ref } from 'vue'
+import { useRoute } from 'vue-router'
 
-export default {
-    name: "docOperation",
-    data() {
-        return {
-            data: [
-                {
-                    name: "竖个大拇指",
-                    src: require("@renderer/assets/source/like.png"),
-                    index: "1"
-                },
-                {
-                    name: "马上收藏",
-                    src: require("@renderer/assets/source/heart.png"),
-                    index: "2"
-                },
-                {
-                    name: "立马下载",
-                    src: require("@renderer/assets/source/download.png"),
-                    index: "3"
-                },
-            ],
-            docId: this.$route.query.docId,
-        }
-    },
-    props: {
-        likeStatus: Number,
-        collectStatus: Number
-    },
-    mounted() {
+// // 获取当前路由信息
+const route = useRoute()
+// console.log("==============sssssssss==========",route)
+const docId = route.query.docId
 
-    },
-    methods: {
-        operate(item) {
-            if (item.index === "3") {
-                window.open(StaticSource.docPreviewUrl(this.docId), "_blank");
-            } else if (item.index === "1" || item.index === "2") {
-                this.$emit("addLike", Number(item.index))
-            }
-        }
-    }
+// 操作项数据
+const data = ref([
+  {
+    name: "立马下载",
+    src: new URL("@renderer/assets/source/download.png", import.meta.url).href,
+    index: "3"
+  }
+])
+
+// 点击操作
+function operate(item) {
+  if (item.index === "3") {
+    window.open(StaticSource.docPreviewUrl(docId), "_blank")
+  }
 }
 </script>
 

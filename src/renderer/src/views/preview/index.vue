@@ -39,16 +39,13 @@
                     </div>
             </div>
 
-            <!-- <div class="my-container">
+            <div class="my-container">
                 <div class="doc-operation-body">
                     <doc-operation :likeStatus="likeStatus" :collectStatus="collectStatus"
                                    @addLike="addLike"
                     />
                 </div>
-                <div class="doc-comment">
-                    <comment-page/>
-                </div>
-            </div> -->
+            </div>
         </div>
     </div>
 

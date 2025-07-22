@@ -127,7 +127,7 @@ export default {
     border: 1px solid #dcdee2;
 }
 
-::v-deep .demo-split-pane {
+:deep .demo-split-pane {
     padding: 0;
     text-align: left;
     height: 100%;

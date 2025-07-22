@@ -295,7 +295,7 @@ export default {
     width: 22px;
 }
 
-::v-deep .ivu-table td {
+:deep .ivu-table td {
     cursor: pointer !important;
 }
 </style>

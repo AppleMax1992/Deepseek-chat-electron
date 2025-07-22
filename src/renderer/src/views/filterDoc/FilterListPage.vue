@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import DocThumb from '@renderer/views/home/DocThumb.vue'
+import DocThumb from '@renderer/views/documents/DocThumb.vue'
 export default {
     name: "FilterListPage",
     data() {
@@ -77,7 +77,7 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
+    <style scoped>
 .doc-group {
     width: 100%;
     height: 660px;

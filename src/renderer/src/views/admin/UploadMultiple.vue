@@ -149,7 +149,7 @@ export default {
 <style scoped>
 
 
-::v-deep .ivu-upload-list {
+:deep .ivu-upload-list {
     max-height: 200px;
     overflow-y: auto;
     overflow-x: hidden;
