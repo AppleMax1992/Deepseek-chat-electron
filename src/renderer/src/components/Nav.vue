@@ -23,8 +23,9 @@ const authStore = useAuthStore();
       <a-menu mode="horizontal" theme="dark" :selectedKeys="[route.meta.index]">
         <a-menu-item key="1"><router-link to="/" class="nav-item nav-link">主页</router-link></a-menu-item>
         <a-menu-item key="2"><router-link to="/users" class="nav-item nav-link">用户管理</router-link></a-menu-item>
-        <a-menu-item key="3"><router-link to="/documents" class="nav-item nav-link">文档管理</router-link></a-menu-item>
-        <a-menu-item key="4"><button @click="authStore.logout()" style="color: white;" class="btn btn-link nav-item nav-link">注销</button></a-menu-item>
+        <a-menu-item key="3"><router-link to="/documents" class="nav-item nav-link">文档检索</router-link></a-menu-item>
+        <a-menu-item key="4"><router-link to="/documents/manager" class="nav-item nav-link">文档管理</router-link></a-menu-item>
+        <a-menu-item key="5"><button @click="authStore.logout()" style="color: white;" class="btn btn-link nav-item nav-link">注销</button></a-menu-item>
       </a-menu>
     </div>
   </template>

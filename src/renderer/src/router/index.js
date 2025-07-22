@@ -108,7 +108,16 @@ const routes = [
                 component: function () {
                     return import("@renderer/views/documents/AddEdit.vue")
                 }   
-            }
+            },
+            { 
+                path: 'manager',                 
+                component: function () {
+                    return import("@renderer/views/documents/Manager.vue")
+                },
+                meta: { 
+                    index: '4' 
+                }, 
+            },
         ]
     },
     {
@@ -143,6 +152,20 @@ const routes = [
             return import("../views/preview/index.vue")
         }
     },
+    {
+        path: "/newPreview",
+        name: "newPreview",
+        component: function () {
+            return import("../views/preview/PdfView1.vue")
+        }
+    },
+    // {
+    //     path: "docUpload",
+    //     name: "docUpload",
+    //     component: function () {
+    //         return import("../views/userPage/DocUpload.vue")
+    //     }
+    // },
     // catch all redirect to home page
     { path: '/:pathMatch(.*)*', redirect: '/' }
 
