@@ -31,7 +31,8 @@
             display: flex;
             justify-content: center;
             "
-                @click="uploadFile"
+            @click="uploadFile"
+            v-if="filename"
         >
             <div style="padding: 5px; line-height: 45px;">
                 <img :src="buttonSrc" width="24px" height="28px" alt="pic"/>
@@ -162,8 +163,8 @@ onMounted(() => {
 
 
 const getRecentDocList = async () => {
-    if (pageNum.value > total.value / pageSize.value) return
-    if (loadedPages.value.includes(pageNum.value)) return
+    // if (pageNum.value > total.value / pageSize.value) return
+    // if (loadedPages.value.includes(pageNum.value)) return
 
     const param = {
     cateId: cateId.value,
@@ -221,7 +222,7 @@ function removeDoc(id) {
     DocumentRequest.deleteData(params).then(response => {
         if (response.code === 200) {
             Message?.success("删除文档成功！")
-            init()
+            window.location.reload()
         }
     }).catch(() => {
         Message?.error("删除文档出错！")
@@ -300,7 +301,7 @@ async function uploadFile() {
       uploadProcess.value = 1
       Message.success('成功！')
       // 上传之后重新加载列表   
-      init()
+      window.location.reload()
     } else {
       Message.error('上传出错：' + res.message)
       uploadProcess.value = 0.00

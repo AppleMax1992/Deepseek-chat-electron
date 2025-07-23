@@ -35,7 +35,10 @@ const routes = [
                 path: 'login',         
                 component: function () {
                     return import("@renderer/views/account/Login.vue")
-                } 
+                },
+                meta: { 
+                    showNav: false 
+                }  
             },
             { 
                 path: 'register',                 
