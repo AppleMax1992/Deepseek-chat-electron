@@ -43,8 +43,11 @@ const routes = [
             { 
                 path: 'register',                 
                 component: function () {
-                    return import("@renderer/views/account/Register.vue")
-                }  
+                    return import("@renderer/views/users/Add.vue")
+                },
+                meta: { 
+                    showNav: false 
+                }    
             }
         ]
     },
@@ -66,13 +69,13 @@ const routes = [
             { 
                 path: 'add',                 
                 component: function () {
-                    return import("@renderer/views/users/AddEdit.vue")
+                    return import("@renderer/views/users/Add.vue")
                 }   
             },
             { 
                 path: 'edit',                 
                 component: function () {
-                    return import("@renderer/views/users/AddEdit.vue")
+                    return import("@renderer/views/users/Edit.vue")
                 }   
             }
         ]
