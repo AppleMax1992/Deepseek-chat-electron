@@ -17,6 +17,7 @@ const alertStore = useAlertStore();
 const route = useRoute();
 const id = route.query.id;
 const user = ref(null)
+const username = ref()
 let title = '创建用户';
 if (id) {
     // edit mode
@@ -69,27 +70,6 @@ async function onSubmit(values) {
     <h1>{{title}}</h1>
     <template v-if="user">
         <Form @submit="onSubmit" :validation-schema="schema" :initial-values="user" v-slot="{ errors, isSubmitting }">
-            <!-- <div class="form-row">
-                <div class="form-group col">
-                    <label>First Name</label>
-                    <Field name="firstName" type="text" class="form-control" :class="{ 'is-invalid': errors.firstName }" />
-                    <div class="invalid-feedback">{{ errors.firstName }}</div>
-                </div>
-                <div class="form-group col">
-                    <label>Last Name</label>
-                    <Field name="lastName" type="text" class="form-control" :class="{ 'is-invalid': errors.lastName }" />
-                    <div class="invalid-feedback">{{ errors.lastName }}</div>
-                </div>
-            </div> -->
-            <!-- let params = {
-                id: this.userInfo.id,
-                password: this.userInfo.password,
-                phone: this.userInfo.phoneNum,
-                mail: this.userInfo.mail,
-                male: this.userInfo.gender === 'male',
-                description: this.userInfo.userComment,
-                birthtime: this.userInfo.birthtime
-            } -->
             <div class="form-row">
                 <div class="form-group col">
                     <label>用户名</label>
@@ -108,9 +88,9 @@ async function onSubmit(values) {
             <div class="form-group">
                 <button class="btn btn-primary" :disabled="isSubmitting">
                     <span v-show="isSubmitting" class="spinner-border spinner-border-sm mr-1"></span>
-                    Save
+                    保存
                 </button>
-                <router-link to="/users" class="btn btn-link">Cancel</router-link>
+                <router-link to="/users" class="btn btn-link">取消</router-link>
             </div>
         </Form>
     </template>

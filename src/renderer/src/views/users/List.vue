@@ -23,7 +23,7 @@ onMounted(() => {
 <template>
     <h1>用户管理</h1>
     <!-- {{ users.data }} -->
-    <router-link to="/users/add" class="btn btn-sm btn-success mb-2">Add User</router-link>
+    <router-link to="/users/add" class="btn btn-sm btn-success mb-2">创建用户</router-link>
     <table class="table table-striped">
         <thead>
             <tr>
@@ -41,10 +41,10 @@ onMounted(() => {
                     <td>{{ user.permissionEnum }}</td>
                     <td>{{ user.createDate }}</td>
                     <td style="white-space: nowrap">
-                        <router-link :to="`/users/edit?id=${user.id}`" class="btn btn-sm btn-primary mr-1">Edit</router-link>
+                        <router-link :to="`/users/edit?id=${user.id}`" class="btn btn-sm btn-primary mr-1">编辑</router-link>
                         <button @click="usersStore.delete(user.id)" class="btn btn-sm btn-danger btn-delete-user" :disabled="user.isDeleting">
                             <span v-if="user.isDeleting" class="spinner-border spinner-border-sm"></span>
-                            <span v-else>Delete</span>
+                            <span v-else>删除</span>
                         </button>
                     </td>
                 </tr>
