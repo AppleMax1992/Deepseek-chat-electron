@@ -1,7 +1,7 @@
 <template>
     <div class="home-container">
         <div class="home-header">
-            <Nav></Nav>
+            <!-- <Nav></Nav> -->
         </div>
         <div class="home-banner">
             <Banner></Banner>

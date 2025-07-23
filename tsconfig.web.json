@@ -7,6 +7,9 @@
     "src/preload/*.d.ts"
   ],
   "compilerOptions": {
+    "types": ["node"],
+    "strictNullChecks":false,
+    "allowJs": true,
     "composite": true,
     "baseUrl": ".",
     "paths": {

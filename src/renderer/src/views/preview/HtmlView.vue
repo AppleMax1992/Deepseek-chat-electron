@@ -14,7 +14,7 @@
 import mammoth from "mammoth";
 import { BackendUrl } from '@renderer/api/request'
 
-import StatisticSource from "@/api/staticSourceUrl"
+import StatisticSource from "@renderer/api/staticSourceUrl"
 
 export default {
     name: "WordView",

@@ -7,56 +7,39 @@
         <div class="upload-title">
             <span>上传文档</span>
         </div>
-        <Row>
-            <Col span="1" class="star-tag">
-                <span>*</span>
-            </Col>
-            <Col span="12" style="text-align: left">
-                <div class="upload-panel" @click="uploadDialogShow">
-                    <div style="padding: 30px 0;">
-                        <div style="padding: 5px; line-height: 45px;">
-                            <img :src="folderSrc" width="68px" height="68px" alt="upload-pic"/>
-                        </div>
-                        <p>支持Word/Excel/PPT/PDF，不超过100M</p>
-                    </div>
-                    <input type="file" ref="fileToUpload" id="fileToUpload" style="display: none"
-                           @change="changeFile">
+        <div class="upload-panel" @click="uploadDialogShow">
+            <div style="padding: 30px 0;">
+                <div style="padding: 5px; line-height: 45px;">
+                    <img :src="folderSrc" width="68px" height="68px" alt="upload-pic"/>
                 </div>
-            </Col>
-            <!-- <a-upload @change="changeFile" draggable action="/" /> -->
-        </Row>
-        <Row v-show="true">
-            <Col span="1" class="star-tag">
-            </Col>
-            <Col span="20" style="text-align: left">
-                <div class="file-title" v-if="filename">
-                    <span>{{ filename }}</span>
-                </div>
-                <div class="progress-wrapper" v-if="processFlag">
-                    <div class="pro" :style="uploadProcess | processStyle"></div>
-                </div>
-            </Col>
-        </Row>
-        <Row style="margin-top: 30px;">
-            <Col>
-                <div class="upload-button" style="width: 180px; height: 45px; border: 2px solid #000;
-                    background: #FFF7D6;
-                    box-shadow: 0 0 10px 0 rgba(129,100,0,0.3);
-                    border-radius: 8px;
-                    display: flex;
-                    justify-content: center;
-                    "
-                     @click="uploadFile"
-                >
-                    <div style="padding: 5px; line-height: 45px;">
-                        <img :src="buttonSrc" width="24px" height="28px" alt="pic"/>
-                    </div>
-                    <span
-                        style="line-height: 45px; color: #000; font-size: 16px; font-weight: 600;"
-                    >点我上传文档</span>
-                </div>
-            </Col>
-        </Row>
+                <p>支持Word/Excel/PPT/PDF，不超过100M</p>
+            </div>
+            <input type="file" ref="fileToUpload" id="fileToUpload" style="display: none"
+                    @change="changeFile">
+        </div>
+        <div class="file-title" v-if="filename">
+            <span>{{ filename }}</span>
+        </div>
+        <div class="progress-wrapper" v-if="processFlag">
+            <div class="pro" :style="uploadProcess | processStyle"></div>
+        </div>
+
+        <div class="upload-button" style="width: 180px; height: 45px; border: 2px solid #000;
+            background: #FFF7D6;
+            box-shadow: 0 0 10px 0 rgba(129,100,0,0.3);
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            "
+                @click="uploadFile"
+        >
+            <div style="padding: 5px; line-height: 45px;">
+                <img :src="buttonSrc" width="24px" height="28px" alt="pic"/>
+            </div>
+            <span
+                style="line-height: 45px; color: #000; font-size: 16px; font-weight: 600;"
+            >点我上传文档</span>
+        </div>
     </div>
     <table class="table table-striped" style="text-align: center;">
         <thead >

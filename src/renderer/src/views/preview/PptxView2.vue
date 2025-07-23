@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import { BackendUrl } from '@/api/request'
+import { BackendUrl } from '@renderer/api/request'
 let PDFJS = require('pdfjs-dist');
 PDFJS.GlobalWorkerOptions.workerSrc = require("pdfjs-dist/build/pdf.worker.entry.js");
 export default {

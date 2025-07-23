@@ -12,7 +12,7 @@
 
 <script>
 import {marked} from 'marked';
-import StatisticSourceUrl from "@/api/staticSourceUrl"
+import StatisticSourceUrl from "@renderer/api/staticSourceUrl"
 
 export default {
     name: 'mdView',

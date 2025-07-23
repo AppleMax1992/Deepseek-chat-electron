@@ -9,7 +9,7 @@
 
 // docx文档预览(只能转换.docx文档，转换过程中复杂样式被忽，居中、首行缩进等)
 import mammoth from "mammoth";
-import StaticSource from "@/api/staticSourceUrl"
+import StaticSource from "@renderer/api/staticSourceUrl"
 
 export default {
     name: "WordView",

@@ -12,7 +12,6 @@ import './index.css';
 import { fakeBackend } from '@renderer/helpers';
 import router from './router'; // 确保路径正确
 // import { useAuthStore } from '@renderer/stores';
-import ViewUIPlus from 'view-ui-plus'
 const pinia = createPinia()
 // const authStore = useAuthStore();
 // setAuthToken(() => authStore);
@@ -23,7 +22,7 @@ fakeBackend();
 const app = createApp(App);
 
 app.use(ArcoVue)
-app.use(ViewUIPlus)
+// app.use(ViewUIPlus)
 pinia.use(piniaPluginPersistedstate)
 app.use(pinia);
 app.use(router);
