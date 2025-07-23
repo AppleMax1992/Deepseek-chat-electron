@@ -2,7 +2,7 @@
   "name": "cumt",
   "version": "1.0.0",
   "description": "An CUMT Electron application for Deepseek",
-  "main": "./out/main/index.js",
+  "main": "./dist/main/index.js",
   "author": "Max",
   "homepage": "https://electron-vite.org",
   "scripts": {
